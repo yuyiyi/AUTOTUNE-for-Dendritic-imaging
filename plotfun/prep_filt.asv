@@ -1,0 +1,72 @@
+function v = prep_filt(handles)
+    v = 0;
+    mainfig_pos = get(handles.mainfigure, 'Position');    
+    scrsz = handles.scrsz;
+    pos = mainfig_pos;
+    pos(1) = pos(1)+100;
+    pos(3) = 300;
+    pos(4) = 200;
+    
+    hplot = figure(25); clf('reset')
+    set(hplot, 'NumberTitle', 'off', ...
+        'MenuBar', 'none', ...
+        'ToolBar', 'none', ...        
+        'Name', 'Set up fitting', 'Position', pos);
+    if_smooth = uicontrol(hplot,'Style','radiobutton',...
+        'Units', 'normalized',...
+        'String','Smooth traces by moving average ', ...
+        'Position',[0.1 0.8 0.9 0.1],...
+        'FontSize', 10,...
+        'Callback', @selsmoothpress);
+    if_gauss = uicontrol(hplot,'Style','radiobutton',...
+        'Units', 'normalized',...
+        'String','Denoise baseline by Gauss filt', ...
+        'Position',[0.1 0.5 0.9 0.1],...
+        'FontSize', 10,...
+        'Callback', @selgausspress);
+    
+    % pushbutton
+    p = uicontrol(hplot,'style','pushbutton',...
+        'Units', 'normalized',...
+        'String', 'Go',...
+        'position', [0.5 0.2 0.2 0.05],...
+        'FontSize', 11, ...
+        'Callback', @Gopress); 
+    
+    uiwait(hplot)
+    close(hplot)
+    
+    function selsmoothpress(hObject, eventdata)
+         vsmooth = get(hObject, 'Value');
+         if vsmooth==1
+             set(if_gauss, 'Value', 0)
+         end
+    end
+    function selgausspress(hObject, eventdata)
+         vgauss = get(hObject, 'Value');
+         if vgauss==1
+             set(if_smooth, 'Value', 0)
+         end
+    end
+
+    function Gopress(hObject, eventdata)
+        if get(hObject, 'Value') == 1
+            if get(if_smooth,'value') == 0 && get(if_gauss,'value') == 0
+                v = 0;
+            elseif get(if_smooth,'value') == 1 
+                v = 1;
+                set(if_gauss, 'Value', 0)
+            elseif get(if_gauss,'value') == 1 
+                v = 2;
+                set(if_smooth, 'Value', 0)
+            end
+            uiresume;
+            return
+        end
+    end
+
+end
+        
+
+
+    
