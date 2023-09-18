@@ -32,9 +32,12 @@ dd1 = pdist2(ts1, framestamp);
 value_g = []; value_statarray = [];
 tc_segment = [];
 featurelabel = [];
-win = min(t1-t0);
-for j = 1:length(t0)
-    value_g(j,:) = nanmean(trace_stamp(t0(j):t1(j), :),1);  % stimulus block X neuron
+trialID = find(ismember(g, glist(stampsel)));
+dt = t1- t0;
+win = min(dt(trialID));
+for j1 = 1:length(trialID)
+    j = trialID(j1);
+    value_g(j1,:) = nanmean(trace_stamp(t0(j):t1(j), :),1);  % stimulus block X neuron
     tctmp = trace_stamp(t0(j):t0(j)+win-1, :); % stimulus duration (win) X neuron
     if ~isempty(tctmp) 
         % stimulus duration (win) X neuron X stimulus segment (length(g))
@@ -48,8 +51,8 @@ value_std = zeros(length(glist), size(value_g, 2));
 value_sem = zeros(length(glist), size(value_g, 2));
 value_mean = zeros(length(glist), size(value_g, 2));
 for j = 1:length(glist)
-    if sum(g==glist(j))>0
-        tmp = value_g(g==glist(j),:);
+    if sum(featurelabel==glist(j))>0
+        tmp = value_g(featurelabel==glist(j),:);
         if size(tmp,1)>1
             value_mean(j, :) = nanmean(tmp,1);
             value_std(j, :) = nanstd(tmp,[],1);

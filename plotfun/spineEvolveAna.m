@@ -62,10 +62,36 @@ for i1 = 2:length(handles.datafilename)
         dd = pdist2(roi_seed, roi_current);
         [v,idx] = min(dd,[],2);
         % spine didn't change
-        ia = find(v<thresh);
-        ib = idx(ia);
+        ia = []; ib = [];
+        ia1 = find(v<thresh);        
+        if ~isempty(ia1)
+            ib1 = idx(ia1);
+            tmpretain = [ia1, ib1, v(ia1)];
+            [tmp, iitmp] = sortrows(tmpretain, 1);
+            idout = find(diff(tmp(:,1))==0);
+            if ~isempty(idout)
+                tmpretain(idout+1,:) = [];
+            end
+            [tmp, iitmp] = sortrows(tmpretain, 2);
+            idout = find(diff(tmp(:,1))==0);
+            if ~isempty(idout)
+                tmpretain(idout+1,:) = [];
+            end
+            if ~isempty(tmpretain)
+                ia = tmpretain(:,1);
+                ib = tmpretain(:,2);
+            end
+        end
+        if ~isempty(ia)
         ia_miss = setdiff(1:size(roi_seed,1), ia);
-        ib_miss = setdiff(1:size(roi_current,1), ib);
+        else
+            ia_miss = 1:size(roi_seed,1);
+        end
+        if ~isempty(ib) 
+            ib_miss = setdiff(1:size(roi_current,1), ib);
+        else
+            ib_miss = 1:size(roi_current,1);
+        end
         figure(25), subplot(c1,c2,i1)
         imshow(im_norm, [])
 %         set(gca, 'Ydir', 'reverse')

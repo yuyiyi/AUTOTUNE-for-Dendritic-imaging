@@ -92,9 +92,9 @@ if indx > 0
     handles.datafilepath = datafilepath;
     handles = inputmap_init(handles);
     assignin('base', 'handles', handles)
-    handles = loadDataforPlots(handles); 
+%     handles = loadDataforPlots(handles); 
     set(handles.datalist_tbl, 'Data', reshape(handles.datafilename,[],1))
-    assignin('base', 'handles', handles)
+%     assignin('base', 'handles', handles)
     close(f_wait)
     delete(f_wait)
 end
@@ -113,9 +113,15 @@ function datalist_tbl_CreateFcn(hObject, eventdata, handles)
 set(hObject, 'Data', {})
 guidata(hObject, handles);
 
+function datalist_tbl_CellSelectionCallback(hObject, eventdata, handles)
+dataID = eventdata.Indices(1)
+handles = input_refresh(handles, dataID);
+guidata(hObject, handles);
+
 % --- Executes on button press in plotfeature.
 function plotfeature_Callback(hObject, eventdata, handles)
 mainfig_pos = get(handles.mainfigure, 'Position');
+
 [trace_stamp, trace_num, ttlabel] = pooltrace(handles);
 % [varsel] = Selfeature(handles, ttlabel, mainfig_pos);        
 % handles = get_spineROImask(handles);

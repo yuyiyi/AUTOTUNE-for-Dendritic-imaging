@@ -14,7 +14,7 @@ if ~isempty(framestamp)
     if min(size(stampinfo)) > 1
         if ~istable(stampinfo)
             stampinfo = array2table(stampinfo);
-            handles.stampinfo = stampinfo;
+            handles.stampinfo{1} = stampinfo;
         end
         t = table2cell(stampinfo);
         varNames = stampinfo.Properties.VariableNames;

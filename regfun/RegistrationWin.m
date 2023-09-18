@@ -193,6 +193,7 @@ guidata(hObject, handles);
 % --------------------------Call back functions--------------------------
 %%%% directory set up %%%%%%
 function browsefilepath_Callback(hObject, eventdata, handles)
+assignin('base', 'handles', handles)
 if handles.savingflag == 1 
     msgbox('Batch registration in progress', 'Warning','warn');
 else
