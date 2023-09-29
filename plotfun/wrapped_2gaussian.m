@@ -9,5 +9,5 @@ if nargin==2
 end
 
 % 'f(x) = a1*exp(-((x-b1)/c1)^2) + a2*exp(-((x-(b1+pi))/c2)^2)'; 
-y = a1 * exp(-min(abs(x - mu), mu+2*pi-x).^2 ./ (2 * sigma1^2)) +...
-    a2 * exp(-min(abs(x - mu+pi), mu+pi-x).^2 ./ (2 * sigma2^2));
+y = a1 * exp(-min(abs(x - mu), mu+2*rad2deg(pi)-x).^2 ./ (2 * sigma1^2)) +...
+    a2 * exp(-min(abs(x - mu+rad2deg(pi)), mu+rad2deg(pi)-x).^2 ./ (2 * sigma2^2));

@@ -100,7 +100,7 @@ for i = 1:c
     h1 = figure(figiniID+i); clf('reset')
     set(h1, 'Name', [datatitle, 'trial-average response'],'Position', pos, 'NumberTitle', 'off'); 
 end
-cc = colormap(hsv(length(glist)));
+cc = colormap(hsv(length(stampsel)));
 nft = 1;
 for i = 1:length(stampsel)
     ii = find(featurelabel(:,1)==glist(stampsel(i)));

@@ -144,9 +144,9 @@ for n = 1:size(value_g, 2)
         cc = nanmean(y)/(nanmean(xx.^2)+eps);
        while iter<=MaxIter
             if funcsel== 2 % 1 Gaussian fitting                
-                [fitobject1, gof1] = fit(xx, y, fmodel, 'Startpoint', [1,xx(a), 4/pi]);
+                [fitobject1, gof1] = fit(xx, y, fmodel, 'Startpoint', [1,xx(a), median(xx)/2]);
             elseif funcsel== 3 % 2 Gaussian fitting
-                [fitobject1, gof1] = fit(xx, y, fmodel, 'Startpoint', [1,1,xx(a), 4/pi, 4/pi]);
+                [fitobject1, gof1] = fit(xx, y, fmodel, 'Startpoint', [1,1,xx(a), median(xx)/2, median(xx)/2]);
             elseif funcsel ==4 % linear
                 [fitobject1, gof1] = fit(xx, y, fmodel, 'Startpoint', c);
             elseif funcsel ==5 % linear
@@ -174,7 +174,7 @@ for n = 1:size(value_g, 2)
         coefficientValues(n,:) = coeffvalues(fitobj);
         fitrmse(n) = rmse0;
         plot(xx, y, '.')
-        x = linspace(0, 2 * pi, 100);
+        x = linspace(0, 2 * rad2deg(pi), 100);
         if handles.circularfit && funcsel == 2
             hold on, plot(x, wrapped_1gaussian(x, coefficientValues), 'r-')
         elseif handles.circularfit && funcsel == 3
