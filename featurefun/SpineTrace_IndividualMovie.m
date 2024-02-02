@@ -262,12 +262,14 @@ guidata(hObject, handles);
 
 % --- Executes on button press in DeletROI.
 function DeletROI_Callback(hObject, eventdata, handles)
+% assignin('base', 'handles', handles)
 if ~isempty(handles.im_norm)
     rois = [];
     if ~isempty(handles.roi)
         rois = handles.roi;
     end
     if ~isempty(handles.dendrite)
+%         length(handles.dendrite)
         for k = 1:length(handles.dendrite)
             dendroi = zeros(size(handles.im_norm));
             ii = handles.dendrite(k).dend_pixel;

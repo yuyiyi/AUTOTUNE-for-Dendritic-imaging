@@ -32,7 +32,7 @@ else
 end
 
 if ismember('dend_shaft', variableinfo) 
-    shaft_flag = 1;
+    shaft_flag = 2;
 else
     shaft_flag = 0;    
 end

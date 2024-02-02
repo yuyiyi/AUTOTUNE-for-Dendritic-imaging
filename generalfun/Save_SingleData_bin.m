@@ -48,7 +48,7 @@ if grad > 1
                         dend_trace_current(:,i) = dend_trace_tmp;
                     end
                 end
-                 dend_tracefull = cat(1, dend_tracefull, spine_trace_current);
+                 dend_tracefull = cat(1, dend_tracefull, dend_trace_current);
             end
             if ~isempty(handles.dend_shaft)
                 dend_shaft = handles.dend_shaft;

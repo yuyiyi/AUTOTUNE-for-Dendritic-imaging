@@ -1,7 +1,7 @@
 function deletId = call_deletefeature(handles, rois)
 
 im_norm = handles.im_norm*0.8;
-roimap = sum(bsxfun(@times, rois, reshape(1:size(rois,3),1,1,size(rois,3))),3);
+roimap = max(bsxfun(@times, rois, reshape(1:size(rois,3),1,1,size(rois,3))),[],3);
 roimap2 = roimap+im_norm;
 
 scrsz = handles.scrsz;
