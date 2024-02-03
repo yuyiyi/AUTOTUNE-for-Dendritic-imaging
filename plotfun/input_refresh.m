@@ -20,6 +20,7 @@ function handles = input_refresh(handles, dataID)
 %     assignin('base', 'handles', handles)
    
     % show frame stamp table
+    if ~isempty(handles.framestamp)
     framestamp = handles.framestamp{1};
     stampinfo = handles.stampinfo{1};
     if ~isempty(framestamp)
@@ -29,6 +30,7 @@ function handles = input_refresh(handles, dataID)
                 handles.stampinfo{1} = stampinfo;
             end
         end
+    end
     end
     assignin('base', 'handles', handles)    
     close(f_wait)

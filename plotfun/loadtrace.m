@@ -12,6 +12,7 @@ dend_dff = [];
 dend_filt = [];
 dend_line_all = [];
 dend_title = [];
+dend_rois = [];
 spineROI = [];
 rois = [];
 spine_trace = [];
@@ -64,7 +65,7 @@ if d==0
         = loadcustomfeature(variablename, variableinfo, datafilepath, datafilename);
 else
     %%%% check if post processing results exist
-    if ~isempty(dendriteROI)            
+    if ~isempty(dendriteROI)
         if ~isfield(dendriteROI, 'dff')
             for i = 1:length(dendriteROI)
                 dend_dff = [];
@@ -82,11 +83,18 @@ else
         if isfield(dendriteROI, 'dff_filt')
             dend_filt = [dendriteROI.dff_filt];
         end
+        
+        dend_rois = [];
         for i = 1:length(dendriteROI)
             if ~isempty(dendriteROI(i).dend_line)
                 dend_title = cat(1,dend_title,i);
                 dend_line = dendriteROI(i).dend_line;
                 dend_line_all = cat(1, dend_line_all, [dend_line, ones(size(dend_line,1),1)*i]);
+            end
+            roitmp = zeros(size(im_norm,1)*size(im_norm,2), 1);
+            if ~isempty(dendriteROI(i).dend_pixel)
+                roitmp(dendriteROI(i).dend_pixel, 1) = 1;
+                dend_rois = cat(2, dend_rois, roitmp);
             end
         end
     end
@@ -185,6 +193,7 @@ handles.dend_trace = dend_trace;
 handles.dend_dff = dend_dff;
 handles.dend_filt = dend_filt;
 handles.dend_line_all = dend_line_all;
+handles.dend_rois = dend_rois;
     
 handles.spineROI = spineROI;
 handles.roi = rois;

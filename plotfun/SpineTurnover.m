@@ -60,6 +60,7 @@ set( hObject, 'Position', position );
 handles.mainfigure = hObject;
 handles.batchdata = 0;
 handles.datafilename = '';
+handles.datanames = '';
 handles.datafilepath = '';
 [~, Mver] = version;    
 handles.Mver = Mver;
@@ -89,40 +90,52 @@ if indx > 0
         handles.batchdata = 0;
         handles.datafilename = {datafilename};
     end
+    handles.datanames = '';
+    for k = 1:length(handles.datafilename)
+        filenamePieces = split(handles.datafilename{k}, '.');
+        handles.datanames{k}  = filenamePieces{1};
+    end
     handles.datafilepath = datafilepath;
     handles = inputmap_init(handles);
     assignin('base', 'handles', handles)
 %     handles = loadDataforPlots(handles); 
     set(handles.datalist_tbl, 'Data', reshape(handles.datafilename,[],1))
 %     assignin('base', 'handles', handles)
+    
+    handles = input_refresh(handles, 1);
+    SelectfeatureForVisual(handles)
+    figure(1), title(handles.datafilename{1})
+
     close(f_wait)
     delete(f_wait)
 end
 guidata(hObject, handles);
+
 % --- Executes on button press in spinetuneover.
 function spinetuneover_Callback(hObject, eventdata, handles)
 if length(handles.datafilename)>=2
-    [spine_evolve, num_turnover] = spineEvolveAna(handles);
-    save(fullfile(handles.datafilepath, 'SpineEvolveAnalysis.mat'),...
-        'spine_evolve', 'num_turnover')
+    [spine_evolve, num_turnover, filelist, targetdata] = spineEvolveAna(handles);
+    save(fullfile(handles.datafilepath, sprintf('SpineEvolveAnalysis_%s.mat', targetdata)),...
+        'spine_evolve', 'num_turnover', 'filelist')
 else
     msgbox('Load multiple dataset for spine evolution analysis')
 end
 
 function datalist_tbl_CreateFcn(hObject, eventdata, handles)
 set(hObject, 'Data', {})
+assignin('base', 'handles', handles);
 guidata(hObject, handles);
 
 function datalist_tbl_CellSelectionCallback(hObject, eventdata, handles)
 dataID = eventdata.Indices(1)
 handles = input_refresh(handles, dataID);
-guidata(hObject, handles);
-
-% --- Executes on button press in plotfeature.
-function plotfeature_Callback(hObject, eventdata, handles)
 mainfig_pos = get(handles.mainfigure, 'Position');
-
 [trace_stamp, trace_num, ttlabel] = pooltrace(handles);
 % [varsel] = Selfeature(handles, ttlabel, mainfig_pos);        
 % handles = get_spineROImask(handles);
 SelectfeatureForVisual(handles)
+figure(1), title(handles.datafilename{dataID})
+
+guidata(hObject, handles);
+
+
