@@ -114,9 +114,13 @@ guidata(hObject, handles);
 % --- Executes on button press in spinetuneover.
 function spinetuneover_Callback(hObject, eventdata, handles)
 if length(handles.datafilename)>=2
-    [spine_evolve, num_turnover, filelist, targetdata] = spineEvolveAna(handles);
+    [spine_evolve, num_turnover, Dendrite_CrossSess, filelist, targetdata] = spineEvolveAna(handles);
     save(fullfile(handles.datafilepath, sprintf('SpineEvolveAnalysis_%s.mat', targetdata)),...
         'spine_evolve', 'num_turnover', 'filelist')
+    if ~isempty(Dendrite_CrossSess)
+        save(fullfile(handles.datafilepath, sprintf('SpineEvolveAnalysis_%s.mat', targetdata)),...
+        'Dendrite_CrossSess', '-append')
+    end
 else
     msgbox('Load multiple dataset for spine evolution analysis')
 end

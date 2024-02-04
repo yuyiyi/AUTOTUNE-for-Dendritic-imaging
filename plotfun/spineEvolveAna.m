@@ -1,4 +1,4 @@
-function [spine_evolve, num_turnover, filelist, targetdata] = spineEvolveAna(handles)
+function [spine_evolve, num_turnover, Dendrite_CrossSess, filelist, targetdata] = spineEvolveAna(handles)
 
 % funcsel = prepCrossSessReg(handles);
 %     rb1 = 'Register to the last dataset';
@@ -21,6 +21,7 @@ roi_seed_master = handles.roi_seed;
 spineID_mask = handles.spine_title;
 dend_roi_mask = [];
 dend_line_mask = [];
+dendidmask = [];
 if ~isempty(handles.dendrite)
     dend_roi_mask = handles.dend_rois;
     dend_line_mask = handles.dend_line_all;
@@ -50,6 +51,7 @@ set(gca, 'Ydir', 'reverse')
 title(sprintf('registration target: dataset %d', targetID))
 
 overlap_totarget = [];
+Dendrite_CrossSess = [];
 targetdata = handles.datanames{targetID};
 filelist{1,1} = fullfile(handles.datafilepath, handles.datafilename(targetID));
 
@@ -83,25 +85,44 @@ for i2 = 1:length(datalist) %2:length(handles.datafilename)
     waitbar(0.5, f_wait,'Feature Registration');
 
     if ~isempty(roi_seed_master) && ~isempty(R_points)
-        if ~isempty(handles.dendrite)
+        if ~isempty(handles.dendrite) && ~isempty(dendidmask)
             dend_roi_current = handles.dend_rois;
             dend_line_current = handles.dend_line_all;
-            dendidcurrent = [0, handles.dend_title];
+            dendidcurrent = handles.dend_title;
             dend_line_translate = R_points*[dend_line_mask(:,1:2)'; 1*randn(1,size(dend_line_mask(:,1:2),1))];
             dend_line_translate = bsxfun(@plus, dend_line_translate, t_points);
             dend_line_translate = round(dend_line_translate(1:2,:)');
             dend_line_translate(:,3) = dend_line_mask(:,3); % mask dendrite id
-            dend_line_translate(min(dend_line_translate(:,1:2))<=0,:) = [];
-            dend_line_translate(dend_line_translate(:,1)>d2,:) = [];
-            dend_line_translate(dend_line_translate(:,2)>d1,:) = [];
             dendpixelidx = sub2ind(size(im_norm), dend_line_translate(:,2), dend_line_translate(:,1));
             [c, itmp] = unique(dendpixelidx);
             dend_line_translate = dend_line_translate(itmp,:);
             dendpixelidx = dendpixelidx(itmp,:);
-            dendidtmp = dend_roi_current(dendpixelidx); % current dendrite id
-            idmatch = [dendidtmp, dend_line_translate(:,3)];
-            h = confusionmat(dendidtmp, dend_line_translate(:,3),'Order', 0:max());
+            dendlength1 = groupcounts(dend_line_translate(:,3));
+            iiout = [find(min(dend_line_translate(:,1:2))<=0); find(dend_line_translate(:,1)>d2); find(dend_line_translate(:,2)>d1)];
+            dend_line_translate(iiout,:) = [];
+            dendpixelidx(iiout) = [];
+            dendidtmp = dend_roi_current(dendpixelidx); % current dendrite id            
+            % generate confusion matrix h [current id, mask id] translate
+            % mask to match current
+            dendorder = unique([dendidcurrent; dendidmask]);
+            dendlength = zeros(length(dendorder),1)+eps;
+            dendlength(ismember(dendidmask, dendorder)) = dendlength1;
+            [h, dorder] = confusionmat(dendidtmp(dendidtmp~=0), dend_line_translate(dendidtmp~=0,3),'Order', dendorder);
+            [matchv, matchid] = max(h); % matched dend in the current dataset
             
+            dendoverlaptmp = [dorder, dorder(matchid)];
+            dendoverlaptmp(matchv./dendlength'<0.2,2) = 0;
+            dendoverlaptmp(~ismember(dendoverlaptmp(:,1), dendidmask), :) = [];
+            dendoverlaptmp = sortrows(dendoverlaptmp, 1);
+            if ~isempty(setdiff(dendidcurrent, dendoverlaptmp(:,2)))
+                tmp = setdiff(dendidcurrent, dendoverlaptmp(:,2));
+                dendoverlaptmp = cat(1, dendoverlaptmp, [zeros(length(tmp),1), tmp]);
+            end
+            if i2 == 1
+                Dendrite_CrossSess = dendoverlaptmp;
+            else
+                Dendrite_CrossSess(1:size(dendoverlaptmp,1), k1) = dendoverlaptmp(:,2);
+            end
         end
         roi_seed = R_points*[roi_seed_master'; 1*randn(1,size(roi_seed_master,1))];
         roi_seed = bsxfun(@plus, roi_seed, t_points);
@@ -219,5 +240,7 @@ num_turnover.Properties.VariableNames = {'lost', 'retain', 'gain'};
 overlap_totarget(overlap_totarget==0) = nan;
 spine_evolve = array2table(overlap_totarget);
 spine_evolve.Properties.VariableNames = handles.datanames([targetID, datalist]);
-
+if ~isempty(Dendrite_CrossSess)
+    Dendrite_CrossSess.Properties.VariableNames = handles.datanames([targetID, datalist]);
+end
 close(f_wait), delete(f_wait)
