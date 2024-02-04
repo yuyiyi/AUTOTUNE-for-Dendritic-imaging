@@ -84,17 +84,13 @@ else
             dend_filt = [dendriteROI.dff_filt];
         end
         
-        dend_rois = [];
+        dend_rois = zeros(size(im_norm,1)*size(im_norm,2), 1);
         for i = 1:length(dendriteROI)
             if ~isempty(dendriteROI(i).dend_line)
                 dend_title = cat(1,dend_title,i);
                 dend_line = dendriteROI(i).dend_line;
                 dend_line_all = cat(1, dend_line_all, [dend_line, ones(size(dend_line,1),1)*i]);
-            end
-            roitmp = zeros(size(im_norm,1)*size(im_norm,2), 1);
-            if ~isempty(dendriteROI(i).dend_pixel)
-                roitmp(dendriteROI(i).dend_pixel, 1) = 1;
-                dend_rois = cat(2, dend_rois, roitmp);
+                dend_rois(dendriteROI(i).dend_pixel, 1) = i;
             end
         end
     end
