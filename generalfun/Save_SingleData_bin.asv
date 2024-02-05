@@ -29,7 +29,15 @@ if ~isempty(handles.dend_shaft)
 end
 if ~isempty(dendriteROI) && ~isempty(spineROI)
     if ~isfield(spineROI, 'dendriteID')
-    [id, dend_arcloc] = nearestDendrite(roi_seed, dendriteROI, handles);
+    dend_line_all = [];
+    for i = 1:length(dendriteROI)
+        if ~isempty(dendriteROI(i).dend_line)
+            dend_title = cat(1,dend_title,i);
+            dend_line = dendriteROI(i).dend_line;
+            dend_line_all = cat(1, dend_line_all, [dend_line, ones(size(dend_line,1),1)*i]);
+        end
+    end
+    id = nearestDendrite(roi_seed, dend_line_all);
     i = 0;
     for k = 1:length(spineROI)
         if ~isempty(spineROI(k).roi_seed)
@@ -87,37 +95,50 @@ if grad > 1
         end
     end
     waitbar(0.9, f_wait, 'It is a long movie, saving in progress');
-    if ~isempty(spineROI)
+    if ~isempty(handles.spineROI)
         for i=1:length(spineROI)
             if ~isempty(spineROI(i).spine_trace)
                 spineROI(i).spine_trace = spine_trace_full(:,i);
+                spine_dff = getdff(spine_trace_full(:,i));
+                spineROI(i).spine_dff = spine_dff;
             end
         end
+        save(fullfile(handles.savepath, handles.savename), 'spineROI', '-append')
     end
     if ~isempty(handles.dendrite)
         for i = 1:length(dendriteROI)
             if ~isempty(dendriteROI(i).trace)
                 dendriteROI(i).trace = dend_tracefull(:,i);
+                dend_dff = getdff(dend_tracefull);
+                dendriteROI(i).dff = dend_dff(:,i);
             end
         end
+        save(fullfile(handles.savepath, handles.savename), 'dendriteROI', '-append')
     end
     if ~isempty(handles.dend_shaft)
         for i=1:length(dend_shaft)
             if ~isempty(dend_shaft(i).shaft_pixel)
                 dend_shaft(i).shaft_trace = shaft_tracefull(:,i);
+                shaft_dff = getdff(shaft_tracefull(:,i));
+                dend_shaft(i).shaft_dff = shaft_dff;
+            else
+                dend_shaft(i).shaft_trace = [];
+                dend_shaft(i).shaft_dff = [];
             end
         end
-    end    
+        save(fullfile(handles.savepath, handles.savename), 'dend_shaft', '-append')
+    end
+    
+else
+    getdff_all
 end
-savedff_all(dendriteROI, spineROI, dend_shaft)
-
 
 waitbar(1, f_wait, 'Saving');
 close(f_wait)
 delete(f_wait)
 
 
-function savedff_all(dendriteROI, spineROI, dend_shaft)
+function getdff_all(dendriteROI, spineROI, dend_shaft)
     if ~isempty(dendriteROI)
         for i = 1:length(dendriteROI)
             dend_dff = [];
@@ -141,7 +162,8 @@ function savedff_all(dendriteROI, spineROI, dend_shaft)
         end        
         save(fullfile(handles.savepath, handles.savename), 'spineROI', '-append')
     end
-    if ~isempty(dend_shaft)
+    if ~isempty(handles.dend_shaft)
+        dend_shaft = handles.dend_shaft;
         for k = 1:length(dend_shaft)
             shaft_dff = [];
             shaft_trace_current = dend_shaft(k).shaft_trace;

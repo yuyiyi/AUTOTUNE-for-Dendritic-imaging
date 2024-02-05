@@ -132,14 +132,15 @@ else
             spine_filt = [spineROI.dff_filt];
         end
 
-        if ~isempty(dend_line_all)
+        if ~isempty(dendriteROI)
             if ~isfield(spineROI, 'dendriteID')
-                id = nearestDendrite(roi_seed, dend_line_all);
+                [id, dend_arcloc] = nearestDendrite(roi_seed, dendriteROI);
                 i = 0;
             for k = 1:length(spineROI)
                 if ~isempty(spineROI(k).roi_seed)
                     i = i+1;
                     spineROI(k).dendriteID = id(i);
+                    spineROI(k).dendloc_linear = dend_arcloc(i);
                 end
             end
             save(fullfile(datafilepath, datafilename), 'spineROI', '-append')
