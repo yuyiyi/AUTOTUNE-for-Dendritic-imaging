@@ -26,15 +26,20 @@ if ~isempty(handles.spineROI)
 end
 if ~isempty(handles.dend_shaft)
     dend_shaft = handles.dend_shaft;
+    if ~isfield(dend_shaft, 'dendloc_linear')
+        dend_shaft = shaftloc(dend_shaft, dendriteROI);
+    end
 end
 if ~isempty(dendriteROI) && ~isempty(spineROI)
-    if ~isfield(spineROI, 'dendriteID')
-    [id, dend_arcloc] = nearestDendrite(roi_seed, dendriteROI, handles);
+    if ~isfield(spineROI, 'dendriteID') || ~isfield(spineROI, 'dendloc_linear')
+    [nearestID, dend_arcloc, dendloc] = nearestDendrite(roi_seed, dendriteROI, handles);
     i = 0;
     for k = 1:length(spineROI)
         if ~isempty(spineROI(k).roi_seed)
             i = i+1;
-            spineROI(k).dendriteID = id(i);
+            spineROI(k).dendriteID = nearestID(i);
+            spineROI(k).dendloc_linear = dend_arcloc(i);
+            spineROI(k).dendloc_pixel = dendloc(i,:);
         end
     end
     end

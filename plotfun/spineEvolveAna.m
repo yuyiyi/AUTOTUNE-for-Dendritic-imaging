@@ -221,7 +221,6 @@ end
 figure(25), subplot(c1,c2,i2+1),
 legend('retained', 'lost', 'gained')
 
-
 figure(25)
 if size(num_turnover,1)>2
     subplot(c1,c2,length(handles.datafilename)+1), 

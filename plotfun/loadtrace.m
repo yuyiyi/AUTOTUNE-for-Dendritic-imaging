@@ -133,14 +133,15 @@ else
         end
 
         if ~isempty(dendriteROI)
-            if ~isfield(spineROI, 'dendriteID')
-                [id, dend_arcloc] = nearestDendrite(roi_seed, dendriteROI);
+            if ~isfield(spineROI, 'dendriteID') || ~isfield(spineROI, 'dendloc_linear')
+                [nearestID, dend_arcloc, dendloc] = nearestDendrite(roi_seed, dendriteROI, handles);
                 i = 0;
             for k = 1:length(spineROI)
                 if ~isempty(spineROI(k).roi_seed)
                     i = i+1;
-                    spineROI(k).dendriteID = id(i);
+                    spineROI(k).dendriteID = nearestID(i);
                     spineROI(k).dendloc_linear = dend_arcloc(i);
+                    spineROI(k).dendloc_pixel = dendloc(i,:);
                 end
             end
             save(fullfile(datafilepath, datafilename), 'spineROI', '-append')
@@ -150,6 +151,10 @@ else
 
     if ~isempty(dend_shaft)  
         flag = 0;
+        if ~isfield(dend_shaft, 'dendloc_linear')
+            dend_shaft = shaftloc(dend_shaft, dendriteROI);
+            flag = 1;
+        end
         if ~isfield(dend_shaft, 'shaft_dff')
             flag = 1;
         end
