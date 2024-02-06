@@ -90,10 +90,10 @@ if indx > 0
         handles.batchdata = 0;
         handles.datafilename = {datafilename};
     end
-    handles.datanames = '';
+    handles.datanames = "";
     for k = 1:length(handles.datafilename)
         filenamePieces = split(handles.datafilename{k}, '.');
-        handles.datanames{k}  = filenamePieces{1};
+        handles.datanames(k) = string(filenamePieces{1});
     end
     handles.datafilepath = datafilepath;
     handles = inputmap_init(handles);

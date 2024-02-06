@@ -3,17 +3,17 @@ function [R_points, t_points, im_mask_reg, handles] =...
 
 %%%% im_mask_reg is a transformed version of im_mask to match
 %%%% im_current
-handles.roimask = [];
-handles.pt = [];
-handles.tempRoi = [];
-handles.Temptrace = [];
-handles.id = 0;
-handles.roi_seed = [];
-handles.roi = [];
-handles.trace = [];
-handles.spineROI = [];
-handles.dendrite = [];
-handles.dend_shaft = [];
+% handles.roimask = [];
+% handles.pt = [];
+% handles.tempRoi = [];
+% handles.Temptrace = [];
+% handles.id = 0;
+% handles.roi_seed = [];
+% handles.roi = [];
+% handles.trace = [];
+% handles.spineROI = [];
+% handles.dendrite = [];
+% handles.dend_shaft = [];
 im_current = handles.im_norm;
 ops.maxIter = 150;
 ops.tot = 10^-4;

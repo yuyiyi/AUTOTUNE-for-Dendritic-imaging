@@ -114,7 +114,7 @@ if grad > 1
         end
     end    
 end
-savedff_all(dendriteROI, spineROI, dend_shaft)
+savedff_all(dendriteROI, spineROI, dend_shaft, handles)
 
 
 waitbar(1, f_wait, 'Saving');
@@ -122,7 +122,7 @@ close(f_wait)
 delete(f_wait)
 
 
-function savedff_all(dendriteROI, spineROI, dend_shaft)
+function savedff_all(dendriteROI, spineROI, dend_shaft, handles)
     if ~isempty(dendriteROI)
         for i = 1:length(dendriteROI)
             dend_dff = [];

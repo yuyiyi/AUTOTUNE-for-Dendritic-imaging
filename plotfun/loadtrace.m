@@ -23,6 +23,7 @@ spine_BAP_current = [];
 spine_trace_BAPremoval = [];
 spine_BAPremoval_coef = [];
 spine_title = [];
+spinesize = [];
 dend_shaft = [];
 shaft_trace = [];
 shaft_dff = [];
@@ -104,6 +105,7 @@ else
                 spine_title = cat(1, spine_title, i);
                 roitmp(spineROI(i).spine_pixel, 1) = 1;
                 rois = cat(2, rois, roitmp);
+                spinesize = cat(1, spinesize, length(spineROI(i).spine_pixel));
             end
         end
         rois = reshape(rois, size(im_norm,1), size(im_norm,2), []);
@@ -133,6 +135,7 @@ else
         end
 
         if ~isempty(dendriteROI)
+            handles.im_norm = im_norm;
             if ~isfield(spineROI, 'dendriteID') || ~isfield(spineROI, 'dendloc_linear')
                 [nearestID, dend_arcloc, dendloc] = nearestDendrite(roi_seed, dendriteROI, handles);
                 i = 0;
@@ -206,6 +209,7 @@ handles.roi_seed = roi_seed;
 handles.spine_BAP_current = spine_BAP_current;
 handles.spine_trace_BAPremoval = spine_trace_BAPremoval;
 handles.spine_BAPremoval_coef = spine_BAPremoval_coef;
+handles.spinesize = spinesize;
 
 handles.dend_shaft = dend_shaft;
 handles.shaft_trace = shaft_trace;

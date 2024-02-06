@@ -21,6 +21,12 @@ imagesc(roimap2), colormap(gray), axis off
 title('Delet ROI by manual clicking (multiselection allowed). Press enter when finish')
 hold on
 [x,y,p] = impixel(roimap2);
+idout = [find(min([x,y],[],2) < 0); find( x > size(im_norm, 2)); find(y > size(im_norm, 1))];
+x(idout) = [];
+y(idout) = [];
+deletId = [];
+if ~isempty(x)
 deletId = roimap(sub2ind(handles.size(1:2),y,x));
 deletId(deletId==0) = [];
 deletId = unique(deletId);
+end
