@@ -1,6 +1,7 @@
-function [im_mask, roi_seed_master, dendriteROI_mask, shaft_flag] ...
+function [im_mask, roi_seed_master, dendriteROI_mask, shaft_flag, dendID] ...
     = loadROImaskfile(maskfilepath, maskfilename)
-
+shaft_flag = 0;
+dendID = [];
 variableinfo = who('-file', fullfile(maskfilepath, maskfilename));
 im_mask = []; roi_seed_master = []; roi_seed = []; dendriteROI_mask = [];
 if ismember('im_norm', variableinfo) 
@@ -18,6 +19,9 @@ if ismember('spineROI', variableinfo)
             roi_seed_master(i,:) = spineROI(i).roi_seed;
         else
             roi_seed_master(i,:) = [nan, nan];
+        end
+        if isfield(spineROI, 'dendriteID')
+            dendID(i) = spineROI(i).dendriteID;
         end
     end
 else

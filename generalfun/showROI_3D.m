@@ -7,7 +7,7 @@ end
 Sat = ones(Ly, Lx);
 % r = [0.1 1];
 rois2 = bsxfun(@times, rois, reshape(1:size(rois,3),1,1,[]));
-ROImap = sum(rois2,3);
+ROImap = max(rois2,[],3);
 if nargin <5
     r = rand(size(rois,3)+1,1);
 else

@@ -8,7 +8,7 @@ for i = 1:length(dendriteROI)
     end
 end
 
-for k = 1:size(dend_shaft,1)
+for k = 1:length(dend_shaft)
     if ~isempty(dend_shaft(k))
         roi_seed = dend_shaft(k).shaft_line;
         if ~isempty(roi_seed)

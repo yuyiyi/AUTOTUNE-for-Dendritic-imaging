@@ -22,5 +22,9 @@ if ~isempty(dendId)
     else
         save(fullfile(handles.savepath, handles.savename), 'im_norm', 'dendriteROI','-append')
     end
+    if ~isempty(handles.dend_shaft)
+        handles.dend_shaft = [];
+        handles.shaft_flag = 0;
+    end
 end
 

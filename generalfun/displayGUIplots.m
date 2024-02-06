@@ -41,7 +41,7 @@ if ifspine == 1
             plot(1:size(handles.trace,1),ff(:,i), 'color', cc(i,:))
             drawnow
         end
-        title('Spine signal')
+%         title('Spine signal')
         drawnow
 %         assignin('base', 'trace', handles.trace);
     else
@@ -75,7 +75,7 @@ if ifspine == 2
         axes(handles.CalciumTrace), hold on
         plot(1:size(handles.Temptrace,1),ff, 'color', cc(end,:))
         drawnow
-        title('Spine signal')
+%         title('Spine signal')
         drawnow
 %         assignin('base', 'trace', handles.trace);
     else

@@ -12,3 +12,4 @@ else
         'InteractionsAllowed', 'none',...
         'Linewidth', 0.5);
 end
+drawnow

@@ -1,4 +1,4 @@
-function handles = spineROI_regmater(handles, t_points, R_points, roi_seed_master)
+function handles = spineROI_regmater(handles, t_points, R_points, roi_seed_master, dendID_master)
 roi_seed = R_points*[roi_seed_master'; 1*randn(1,size(roi_seed_master,1))];
 roi_seed = bsxfun(@plus, roi_seed, t_points);
 roi_seed = roi_seed(1:2,:)';
@@ -52,6 +52,9 @@ for ii = 1:size(roi_seed_master,1)
         spineROI(ii).roi_seed = [];
         spineROI(ii).spine_pixel = [];
         spineROI(ii).spine_trace = [];
+    end
+    if ~isempty(dendID_master)
+        spineROI(ii).dendriteID = dendID_master(ii);
     end
 end
 

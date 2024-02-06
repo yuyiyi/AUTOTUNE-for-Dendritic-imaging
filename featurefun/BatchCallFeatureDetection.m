@@ -62,7 +62,7 @@ if handles.withmask == 1 && ~isempty(handles.im_mask)
         ifdendrite = 1; 
     end 
     if ~isempty(handles.roi_seed_master) 
-        handles = spineROI_regmater(handles, t_points, R_points, handles.roi_seed_master);
+        handles = spineROI_regmater(handles, t_points, R_points, handles.roi_seed_master, handles.dendID_mask);
         ifspine = 1;
     end
     if ~isempty(handles.dendriteROI_mask) && ~isempty(handles.roi_seed_master) && handles.shaft_flag == 1

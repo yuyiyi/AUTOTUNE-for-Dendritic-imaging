@@ -36,6 +36,7 @@ if batchini
     handles.roi_seed_master = [];
     handles.dendriteROI_mask = [];
     handles.shaft_flag = 0;
+    handles.dendID_mask = [];
     set(handles.LoadROImask_check, 'Value', 0);
     set(handles.edittext_maskpath,'Enable','off')
     set(handles.edittext_maskpath, 'String', '');

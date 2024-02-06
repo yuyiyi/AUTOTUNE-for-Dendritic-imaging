@@ -3,8 +3,8 @@ function [nearestID, dend_arcloc, dendloc] = nearestDendrite(roi_seed, dendriteR
 scrsz = handles.scrsz;
 im_norm = handles.im_norm;
 [d1,d2] = size(im_norm);
-r = min(scrsz(3)/3*2/d2, (scrsz(4)-100)/d1)/2;
-pos_spine = round([scrsz(3)/3 20 r*d2 r*d1]);
+r = min(scrsz(3)/3*2/d2, (scrsz(4))/d1)/2;
+pos_spine = round([scrsz(3)/3 100 r*d2 r*d1]);
 if isempty(findobj('type','figure','number',15))
     pos = pos_spine;    
 else
@@ -39,16 +39,36 @@ for i = 1:length(dendriteROI)
 end
 dendtitle = cat(2, dendtitle, 0);
 dend_titlelist = [dend_titlelist, 'None'];
-nearestID = []; dend_arcloc = []; dendloc = [];
+nearestID = []; dend_arcloc = []; dendloc = []; 
+idtmp = [];
+assignin('base', 'handles', handles);
+if isfield(handles.spineROI, 'dendriteID')
+    idtmp = [handles.spineROI.dendriteID];
+end
 for k = 1:size(roi_seed,1)
+    if isempty(idtmp)
     pd = pdist2(roi_seed(k,:), dend_line_all(:,1:2));
     [~, ii] = min(abs(pd));
     id = dend_line_all(ii,3);
     dendloc(k,:) = dend_line_all(ii,1:2);
     dend_arcloc(k) = arc_all(ii);
-    nearestID(k) = id;
+    else
+        id = idtmp(k);
+        if id==0
+            dendloc(k,:) = [nan, nan];
+            dend_arcloc(k) = [nan];
+        else
+            dendtmp = dend_line_all(dend_line_all(:,3)==id,:);
+            arctmp = arc_all(dend_line_all(:,3)==id);
+            pd = pdist2(roi_seed(k,:), dendtmp(:,1:2));
+            [~, iitmp] = min(abs(pd));
+            dendloc(k,:) = dend_line_all(iitmp,1:2);
+            dend_arcloc(k) = arctmp(iitmp);
+        end            
+    end
+    nearestID(k) = id;       
     hold(ax1, 'on');
-    plot(roi_seed(k,1), roi_seed(k,2),'o', 'color', cc(id,:))
+    plot(roi_seed(k,1), roi_seed(k,2),'o', 'color', cc(dendtitle==id,:))
 end
 drawnow
 

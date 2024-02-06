@@ -237,7 +237,11 @@ if ~isempty(handles.im_norm) && ~isempty(handles.mov2d_filt)
     handles.savingflag = 0;
     if refreshflag == 1 && ~isempty(handles.roi)
         f_wait = waitbar(0.5,'Rereshing Feature Detection');
-        handles = refreshspine(handles);        
+        handles = refreshspine(handles); 
+        if ~isempty(handles.dend_shaft)
+            handles.dend_shaft = [];
+            handles.shaft_flag = 0;
+        end
         cla(handles.DisplayResult, 'reset');
         cla(handles.CalciumTrace, 'reset');
         displayGUIplots(handles, 1, 1)
@@ -319,7 +323,6 @@ end
 guidata(hObject, handles);
 
 
-
 % --- Executes on button press in LoadMaskROI.
 function LoadMaskROI_Callback(hObject, eventdata, handles)
 if ~isempty(handles.im_norm)
@@ -327,9 +330,19 @@ if ~isempty(handles.im_norm)
     if indx > 0 
         maskdir = fullfile(maskfilepath, maskfilename);
         fprintf('Load feature mask from: %s\n', maskdir);
-        [im_mask, roi_seed_master, dendriteROI_mask, shaft_flag] = loadROImaskfile(maskfilepath, maskfilename);
-        handles.shaft_flag = shaft_flag;
+        [im_mask, roi_seed_master, dendriteROI_mask, shaft_flag, dendID] ...
+            = loadROImaskfile(maskfilepath, maskfilename);
         if (~isempty(roi_seed_master) || ~isempty(dendriteROI_mask)) && ~isempty(im_mask)
+            handles.shaft_flag = shaft_flag;
+            handles.pt = [];
+            handles.id = 0;
+            handles.spineROI = [];
+            handles.roi_seed = [];
+            handles.roi = [];
+            handles.tempRoi = [];
+            handles.Temptrace = [];
+            handles.trace = [];
+            handles.dend_shaft = [];
             f_wait = waitbar(0.2,'Feature Registration');
             withrotation = 1;
             [R_points, t_points, im_mask_reg, handles]...
@@ -339,7 +352,7 @@ if ~isempty(handles.im_norm)
                 handles = dendrite_regmater(handles, t_points, R_points, dendriteROI_mask);
             end 
             if ~isempty(roi_seed_master) 
-                handles = spineROI_regmater(handles, t_points, R_points, roi_seed_master);
+                handles = spineROI_regmater(handles, t_points, R_points, roi_seed_master, dendID);
             end
             displayGUIplots(handles, 1, 2)
             if ~isempty(dendriteROI_mask) && ~isempty(roi_seed_master) && shaft_flag == 1
