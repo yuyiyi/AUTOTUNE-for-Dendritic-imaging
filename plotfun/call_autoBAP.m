@@ -12,17 +12,21 @@ if ~isempty(handles.spine_dff)
             id = handles.spineROI(spID(k)).dendriteID;
 %             assignin('base', 'roi_seed', handles.roi_seed);
 %             assignin('base', 'dend_line_all', handles.dend_line_all);
-            BAP_current = handles.dend_dff(:,id);
-            xvalue = BAP_current - minF;
-            BAP_all(:,k) = BAP_current;
-            handles.spine_BAP_current(:,k) = BAP_all(:,k);
-            [yvalue_new, coef] = BAPremove_auto(yvalue, xvalue);
-            trace_noBAP = yvalue_new + minF;
-            BAPremoval_coef(k) = coef;
-            handles.spine_BAPremoval_coef(k) = coef;
-            trace_BAPremoval(:,k) = trace_noBAP;
-            handles.spine_trace_BAPremoval(:,k) = trace_noBAP;      
-            handles.spine_BAPdendID(k) = id;
+            if id~=0 && ~isnan(id)
+                BAP_current = handles.dend_dff(:,id);
+            else
+                BAP_current = zeros(size(handles.dend_dff,1),1);
+            end
+                xvalue = BAP_current - minF;
+                BAP_all(:,k) = BAP_current;
+                handles.spine_BAP_current(:,k) = BAP_all(:,k);
+                [yvalue_new, coef] = BAPremove_auto(yvalue, xvalue);
+                trace_noBAP = yvalue_new + minF;
+                BAPremoval_coef(k) = coef;
+                handles.spine_BAPremoval_coef(k) = coef;
+                trace_BAPremoval(:,k) = trace_noBAP;
+                handles.spine_trace_BAPremoval(:,k) = trace_noBAP;      
+                handles.spine_BAPdendID(k) = id;
         end
     end
 end

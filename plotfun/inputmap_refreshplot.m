@@ -4,7 +4,7 @@ function handles = inputmap_refreshplot(handles, dataID)
     % load data
     cla(handles.DisplayResult, 'reset')
     set(handles.uit, 'Data', {})
-    handles = loadtrace(handles, dataID);
+%     handles = loadtrace(handles, dataID);
     axes(handles.DisplayResult), set(gca, 'Ydir', 'reverse')
     %%%% display rois and traces
     if ~isempty(handles.im_norm)

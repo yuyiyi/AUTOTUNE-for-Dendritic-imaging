@@ -12,7 +12,11 @@ if ~isempty(handles.spine_filt)
             id = handles.spineROI(spID(k)).dendriteID;
 %             assignin('base', 'roi_seed', handles.roi_seed);
 %             assignin('base', 'dend_line_all', handles.dend_line_all);
-            BAP_current = handles.dend_filt(:,id);
+            if id~=0 && ~isnan(id)
+                BAP_current = handles.dend_filt(:,id);
+            else
+                BAP_current = zeros(size(handles.dend_filt,1),1);
+            end
             xvalue = BAP_current - minF;
             BAP_all(:,k) = BAP_current;
             handles.spine_BAP_current(:,k) = BAP_all(:,k);

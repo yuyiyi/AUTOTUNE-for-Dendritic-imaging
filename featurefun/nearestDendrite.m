@@ -84,22 +84,28 @@ p = uicontrol('Parent',panel2,'style','pushbutton',...
         'fontsize', 10,...
         'position',[0.7 0.2 0.2 0.15],...
         'Callback', @Gopress);    
+n = uicontrol('Parent',panel2,'style','pushbutton',...
+        'String', 'New',...
+        'Units', 'normalized',...
+        'fontsize', 10,...
+        'position',[0.7 0.5 0.2 0.15],...
+        'Callback', @Newpress);   
 
 idx = selectSpineforedit;
+
 uiwait(hplot)
 close(hplot)
 
     function idx = selectSpineforedit
-        pt = ginput(1);
-        [v, idx] = min(pdist2(pt(1,1:2), roi_seed));
-        if v<5
+        pt = ginput(1)
+        [v, idx] = min(pdist2(pt(1,1:2), roi_seed))
+        if v<10
             c.Enable = 'on';
             c.Value = find(dendtitle==nearestID(idx));
             p1.Enable = 'on';
             t.String = sprintf('Spine %d', idx);
         end
     end
-
     function selection(src,~)
         val = c.Value;
         str = c.String;
@@ -125,6 +131,11 @@ close(hplot)
     
             c.Enable = 'off';
             p1.Enable = 'off';
+            idx = selectSpineforedit;
+        end
+    end
+    function Newpress(hObject, eventdata)
+        if get(hObject, 'Value') == 1
             idx = selectSpineforedit;
         end
     end

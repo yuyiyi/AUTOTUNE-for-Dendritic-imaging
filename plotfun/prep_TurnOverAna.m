@@ -7,8 +7,9 @@ function [thresholdvalue, targetID] = prep_TurnOverAna(handles)
     mainfig_pos = get(handles.mainfigure, 'Position');   
     scrsz = handles.scrsz;
     pos = mainfig_pos;
-    pos(1) = pos(1)-50;
-    pos(3) = pos(3)-50;
+    pos(1) = pos(1)+50;
+    pos(3) = 300;
+    pos(4) = 300;
     hplot = figure(25); clf('reset')
     set(hplot, 'NumberTitle', 'off', ...
         'MenuBar', 'none', ...
