@@ -5,10 +5,16 @@ for k = 1:length(handles.datafilename)
     handles = loadtrace(handles, k);
     framestamp = handles.framestamp{1};
     stampinfo = handles.stampinfo{1};
-    if handles.plotRawdff == 0 && handles.plotBAPdff == 0
+    if handles.plotRawdff == 0 && handles.plotBAPdff == 0 && handles.plotFiltdff == 0
         handles.plotRawdff = 1;
         set(handles.useBAPremove, 'Value', 0)
-        set(handles.useRawtrace, 'Value', 1)        
+        set(handles.useRawtrace, 'Value', 1) 
+    elseif handles.plotRawdff == 1
+        nameappend = '_raw';
+    elseif handles.plotBAPdff == 1 
+        nameappend = '_BAPremove';
+    elseif handles.plotFiltdff == 1 
+        nameappend = '_filt';       
     end
     %%%%% pool all trace for analysis
     [trace_stamp1, trace_num1, ttlabel1] = pooltrace(handles);
@@ -89,10 +95,10 @@ else
                 varsel, varlist, ftdur, condflag, triallabel, beh_t, trialsel_ID,...
                 ttlabel, figiniID, datatitle);
             if isempty(condflag)
-                savevariblename = 'BehavResp';
+                savevariblename = ['BehavResp', nameappend];
             else
                 figtitle = condsel;
-                savevariblename = sprintf('BehavResp_%s', figtitle);
+                savevariblename = sprintf('BehavResp_%s%s', figtitle, nameappend);
             end
             if dosave==1 
                 tempdata.(savevariblename) = BehavResp;
