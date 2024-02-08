@@ -1,6 +1,6 @@
 function varargout = SpineTrace_IndividualMovie(varargin)
 
-% Last Modified by GUIDE v2.5 13-Sep-2023 17:54:04
+% Last Modified by GUIDE v2.5 06-Feb-2024 16:10:52
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -38,8 +38,9 @@ handles.savepath = '';
 handles.filepath = '';
 handles.filename = '';
 handles.fext = '';
-handles = featuredetect_init(handles);
 
+%%%%%%%% initialize handles, set default value %%%%%%%%%%%%%%%%%%%
+handles = featuredetect_init(handles);
 handles.datatype = 3;
 set(handles.moviedata_check, 'Value', 0)
 set(handles.imageseq_check, 'Value', 0)
@@ -61,7 +62,6 @@ else
 end
 [~, Mver] = version;    
 handles.Mver = Mver;
-handles.linewidth = 6;
 cla(handles.CalciumTrace, 'reset')
 cla(handles.DisplayResult, 'reset')
 cla(handles.CalciumTrace_dendrite, 'reset');
@@ -88,6 +88,7 @@ function ind_GPUNum_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
 function moviedata_check_Callback(hObject, eventdata, handles)
 if get(hObject, 'Value') == 1
     handles.datatype = 1;
@@ -173,21 +174,12 @@ if ~isempty(handles.filename)
     %%%% setup data path, saving path, whether it's a movie or a sequence
     if handles.datatype ~=3
         [loadmovieflag, I1, Mem_max, w, handles] = loadmovie_init(handles);
-        handles = Call_loadmovie(loadmovieflag, I1, Mem_max, w, f_wait, handles);
     else
-        if isempty(handles.RegPara)
-            RegPara = []; 
-            variableinfo = who('-file', fullfile(handles.filepath, handles.filename));
-            if ismember('RegPara', variableinfo)
-                load(fullfile(handles.filepath, handles.filename), 'RegPara')        
-                handles.RegPara = RegPara;
-                handles.Regfile = handles.filename;
-            end
-        end
-        handles.savepath
         [loadmovieflag, Mem_max, w, handles] = loadbin_init(handles);
-        handles = Call_loadbin(loadmovieflag, Mem_max, w, f_wait, handles);
+        I1 = [];
     end
+    handles = Call_loadmovie(loadmovieflag, I1, Mem_max, w, f_wait, handles);
+    
     set(handles.edittext_datapath, 'String', fullfile(handles.filepath, handles.filename));
     set(handles.edittext_savepath, 'String', handles.savepath);
     set(handles.edit_savename, 'String', handles.savename)
@@ -301,7 +293,8 @@ displayGUIplots(handles, 1, 2)
 clear dend_shaft
 if ~isempty(handles.spineROI) && ~isempty(handles.dendrite)
     handles.savingflag = 0;
-    handles = call_autoshaft(handles, 1);
+    handles.shaft_flag = 1;
+    handles = call_autoshaftDendr(handles, 1 ,1);
     msgbox('Dendritic shaft feature detection finished')
 else
     msgbox('Add dendrites and spines before adding shaft feature')
@@ -315,7 +308,8 @@ displayGUIplots(handles, 1, 2)
 clear dend_shaft
 if ~isempty(handles.im_norm) && ~isempty(handles.dendrite)
     handles.savingflag = 0;
-    handles = call_autoshaftwholeDendr(handles, 1);
+    handles.shaft_flag = 2;
+    handles = call_autoshaftDendr(handles, 1, 1);
     msgbox('Dendritic shaft feature detection finished')
 else
     msgbox('Add dendrites and spines before adding shaft feature')
@@ -330,8 +324,10 @@ if ~isempty(handles.im_norm)
     if indx > 0 
         maskdir = fullfile(maskfilepath, maskfilename);
         fprintf('Load feature mask from: %s\n', maskdir);
-        [im_mask, roi_seed_master, dendriteROI_mask, shaft_flag, dendID] ...
+        [im_mask, roi_seed_master, dendriteROI_mask, shaft_flag, dendID, defaultPara] ...
             = loadROImaskfile(maskfilepath, maskfilename);
+        handles.defaultPara = defaultPara;
+        assignin('base', 'handles', handles)
         if (~isempty(roi_seed_master) || ~isempty(dendriteROI_mask)) && ~isempty(im_mask)
             handles.shaft_flag = shaft_flag;
             handles.pt = [];
@@ -344,7 +340,7 @@ if ~isempty(handles.im_norm)
             handles.trace = [];
             handles.dend_shaft = [];
             f_wait = waitbar(0.2,'Feature Registration');
-            withrotation = 1;
+            withrotation = handles.defaultPara.ops.withrotation;
             [R_points, t_points, im_mask_reg, handles]...
                 = setupCross_SessionReg(handles, im_mask, withrotation, maskdir);
             waitbar(0.5, f_wait,'Feature Registration');
@@ -355,10 +351,8 @@ if ~isempty(handles.im_norm)
                 handles = spineROI_regmater(handles, t_points, R_points, roi_seed_master, dendID);
             end
             displayGUIplots(handles, 1, 2)
-            if ~isempty(dendriteROI_mask) && ~isempty(roi_seed_master) && shaft_flag == 1
-                handles = call_autoshaft(handles, 1);
-            elseif ~isempty(dendriteROI_mask) && ~isempty(roi_seed_master) && shaft_flag == 2
-                handles = call_autoshaftwholeDendr(handles, 1);                
+            if ~isempty(dendriteROI_mask) && ~isempty(roi_seed_master) && shaft_flag > 0
+                handles = call_autoshaftDendr(handles, 1, 0);              
             end
             close(f_wait), delete(f_wait)
         else
@@ -393,7 +387,6 @@ else
     close(figure(7))  % cross-session registration
     closereq();
 end
-
 
 % --- Executes on button press in DendriticProc_Batch.
 function DendriticProc_Batch_Callback(hObject, eventdata, handles)

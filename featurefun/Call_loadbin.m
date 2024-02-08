@@ -23,8 +23,7 @@ if loadmovieflag
     [d1,d2,T] = size(mov);
     handles.size = [d1, d2, T]; % working size, T is not the full length
     maxL = min(floor((Mem_max-w.bytes*T)/w.bytes), 5000);
-    Gpara = [4,4,2];
-%     Gpara = handles.defaultPara.GaussKernel;
+    Gpara = handles.defaultPara.GaussKernel;
     G = fspecial('gaussian', Gpara(1:2), Gpara(3));
     subsample = max(ceil(T/maxL),1);
     movF = MovGaussFilter_v2(mov, G, subsample, handles.WorkingPrecision, handles.useGPU, handles);

@@ -1,25 +1,28 @@
 function handles = featuredetect_init(handles)
+%%%%%%%% initialize handles, set default value %%%%%%%%%%%%%%%%%%%
+
 close(figure(4))  % manual dendritic tracing
 close(figure(15)) % manual spine feature
 close(figure(7))  % cross-session registration
 % clc
-
+para_default = defaultparameter;
 handles.savingflag = 0;
-handles.defaultvalue = 0.6;
-handles.thresh = handles.defaultvalue;
-handles.defaultPara.GaussKernel = [4, 4, 2];
-handles.linewidth = 6;
+% handles.defaultvalue = 0.6;
+% handles.thresh = handles.defaultvalue;
+handles.linewidth = para_default.linewidth; 
+handles.defaultPara = para_default;
 
-handles.Regfile = '';
-handles.RegPara = [];
-handles.savename = '';
 handles.filepath = '';
+
+handles.savename = '';
 handles.filename = '';
 handles.fext = '';
 handles.movieinputgrad = 1;
 handles.imagelength = [];
 handles.imageinfo = [];
 
+handles.Regfile = '';
+handles.RegPara = [];
 handles.roimask = [];
 handles.im_norm = [];
 handles.size = [];

@@ -11,7 +11,6 @@ while flagadd == 1
     handles.current_dendmask = [];
     flagadd = 0;
     handles = manual_dendrtictrace_v2(handles);
-%     handles = manual_dendrtictrace(handles);    
     choice = questdlg('Accept dendrite?', 'Add dendrite', 'Yes and add', 'Yes and finish', 'No and finish', 'No and finish');
     switch choice
         case 'Yes and finish'
@@ -49,7 +48,7 @@ while flagadd == 1
         drawnow
         dendriteROI = handles.dendrite;
         if exist(fullfile(handles.savepath, handles.savename), 'file')==0
-            save(fullfile(handles.savepath, handles.savename), 'im_norm', 'dendriteROI')
+            save(fullfile(handles.savepath, handles.savename), 'im_norm', 'dendriteROI','-v7.3')
         else
             save(fullfile(handles.savepath, handles.savename), 'im_norm', 'dendriteROI', '-append')        
         end

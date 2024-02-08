@@ -11,8 +11,8 @@ handles.trace = [];
 handles.dend_shaft = [];
 
 f_wait = waitbar(0.2,'Auto Feature Detection progressing');
-sigma = 2;
-quant = 3.5;
+sigma = handles.defaultPara.autofeature(1); % 2
+quant = handles.defaultPara.autofeature(2); % 3.5
 [y, x] = Auto_points(handles, [], sigma, quant, 0, 1);
 handles.pt = [x, y];
 waitbar(0.5, f_wait, 'Auto Feature Detection progressing');

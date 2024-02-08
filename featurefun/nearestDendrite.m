@@ -1,7 +1,11 @@
-function [nearestID, dend_arcloc, dendloc] = nearestDendrite(roi_seed, dendriteROI, handles)
+function [nearestID, dend_arcloc, dendloc] = nearestDendrite(roi_seed, dendriteROI, handles, ifhold)
 
+if nargin < 4
+    ifhold = 1;
+end
 scrsz = handles.scrsz;
 im_norm = handles.im_norm;
+% assignin('base', 'handles', handles);
 [d1,d2] = size(im_norm);
 r = min(scrsz(3)/3*2/d2, (scrsz(4))/d1)/2;
 pos_spine = round([scrsz(3)/3 100 r*d2 r*d1]);
@@ -12,12 +16,14 @@ else
     pos = h1_handles.Position;
 end
 hplot = figure(15);
-cc = colormap(hsv(length(dendriteROI)+1));
-clf('reset')
-set(hplot,'Name', 'Spine on dendrites','Position', pos);
-ax1 = subplot(3,2,1:4);
-imshow(im_norm, [quantile(im_norm(:), 0.3), quantile(im_norm(:), 0.99)],"Border","tight");
-title('Click on a spine to edit its dendritic association.')
+if ifhold
+    cc = colormap(hsv(length(dendriteROI)+1));
+    clf('reset')
+    set(hplot,'Name', 'Spine on dendrites','Position', pos);
+    ax1 = subplot(3,2,1:4);
+    imshow(im_norm, [quantile(im_norm(:), 0.3), quantile(im_norm(:), 0.99)],"Border","tight");
+    title('Click on a spine to edit its dendritic association.')
+end
 
 dend_line_all = []; arc_all = []; 
 dendtitle = []; dend_titlelist = ''; ii = 1;
@@ -29,11 +35,13 @@ for i = 1:length(dendriteROI)
         dC = diff(dend_line,1,1);
         arc = cumsum(sqrt(sum([zeros(1,2); dC].^2,2)));
         dend_line_all = cat(1, dend_line_all, [dend_line, ones(size(dend_line,1),1)*i]);
-        arc_all = cat(1, arc_all, arc);        
-        hold(ax1, 'on');
-        plot(dend_line(:,1), dend_line(:,2), 'color', cc(i,:), 'linewidth', 1)
-        tmp = round(size(dend_line,1)*0.9);
-        text(dend_line(tmp,1), dend_line(tmp,2), sprintf('d%d', i), 'Color', cc(i,:))
+        arc_all = cat(1, arc_all, arc); 
+        if ifhold
+            hold(ax1, 'on');
+            plot(dend_line(:,1), dend_line(:,2), 'color', cc(i,:), 'linewidth', 1)
+            tmp = round(size(dend_line,1)*0.9);
+            text(dend_line(tmp,1), dend_line(tmp,2), sprintf('d%d', i), 'Color', cc(i,:))
+        end
         ii = ii +1;
     end
 end
@@ -47,11 +55,11 @@ if isfield(handles.spineROI, 'dendriteID')
 end
 for k = 1:size(roi_seed,1)
     if isempty(idtmp)
-    pd = pdist2(roi_seed(k,:), dend_line_all(:,1:2));
-    [~, ii] = min(abs(pd));
-    id = dend_line_all(ii,3);
-    dendloc(k,:) = dend_line_all(ii,1:2);
-    dend_arcloc(k) = arc_all(ii);
+        pd = pdist2(roi_seed(k,:), dend_line_all(:,1:2));
+        [~, ii] = min(abs(pd));
+        id = dend_line_all(ii,3);
+        dendloc(k,:) = dend_line_all(ii,1:2);
+        dend_arcloc(k) = arc_all(ii);
     else
         id = idtmp(k);
         if id==0
@@ -62,16 +70,18 @@ for k = 1:size(roi_seed,1)
             arctmp = arc_all(dend_line_all(:,3)==id);
             pd = pdist2(roi_seed(k,:), dendtmp(:,1:2));
             [~, iitmp] = min(abs(pd));
-            dendloc(k,:) = dend_line_all(iitmp,1:2);
+            dendloc(k,:) = dendtmp(iitmp,1:2);
             dend_arcloc(k) = arctmp(iitmp);
         end            
     end
     nearestID(k) = id;       
-    hold(ax1, 'on');
-    plot(roi_seed(k,1), roi_seed(k,2),'o', 'color', cc(dendtitle==id,:))
+    if ifhold
+        hold(ax1, 'on');
+        plot(roi_seed(k,1), roi_seed(k,2),'o', 'color', cc(dendtitle==id,:))
+    end
 end
 drawnow
-
+if ifhold
 panel2 = uipanel('Parent',hplot,...
         'Position',[0.1 0.1 0.8 0.3],...
         'FontSize', 10);
@@ -111,9 +121,10 @@ n = uicontrol('Parent',panel2,'style','pushbutton',...
         'position',[0.7 0.5 0.2 0.15],...
         'Callback', @Newpress);   
 
-idx = selectSpineforedit;
+    idx = selectSpineforedit;
+    uiwait(hplot)
+end
 
-uiwait(hplot)
 close(hplot)
 
     function idx = selectSpineforedit
@@ -140,7 +151,7 @@ close(hplot)
                 arctmp = arc_all(dend_line_all(:,3)==dendtitle(val));
                 pd = pdist2(roi_seed(idx,:), dendtmp(:,1:2));
                 [~, iitmp] = min(abs(pd));
-                dendloc(idx,:) = dend_line_all(iitmp,1:2);
+                dendloc(idx,:) = dendtmp(iitmp,1:2);
                 dend_arcloc(idx) = arctmp(iitmp);
             else
                 dendloc(idx,:) = [nan, nan];

@@ -1,4 +1,13 @@
 function [loadmovieflag, Mem_max, w, handles] = loadbin_init(handles)
+if isempty(handles.RegPara)
+    RegPara = []; 
+    variableinfo = who('-file', fullfile(handles.filepath, handles.filename));
+    if ismember('RegPara', variableinfo)
+        load(fullfile(handles.filepath, handles.filename), 'RegPara')        
+        handles.RegPara = RegPara;
+        handles.Regfile = handles.filename;
+    end
+end
 loadmovieflag = 0;
 [imagefolder, imagefilename, fext] = fileparts(handles.filename);
 handles.fext = fext;

@@ -13,6 +13,7 @@ else
     csgrad = 1000;
     arc_grad = 20;
 end
+k1 = 1;
 for k = 1:length(dendriteROI_mask)
     dend_seed_master = dendriteROI_mask(k).points;
     %%%%%% 
@@ -31,7 +32,7 @@ for k = 1:length(dendriteROI_mask)
         if ~isempty(dendriteROI_mask(k).linewidth)
             linewidth = dendriteROI_mask(k).linewidth;
         else
-            linewidth = 6;
+            linewidth = handles.linewidth;
         end
         arc_grad = max(arc_grad, 20);
         [~, kymo_cordinate] = line_expand(cspoints, linewidth, arc_grad);
@@ -53,25 +54,27 @@ for k = 1:length(dendriteROI_mask)
         pointcormap(defaultline1) = 1;
         dend_pixel = find(pointcormap>0);
         
-        handles.dendrite(k).dend_pixel = dend_pixel;
-        handles.dendrite(k).dend_outline = dend_outline;
-        handles.dendrite(k).points = pt_all;
-        handles.dendrite(k).dend_line = cspoints';
-        handles.dendrite(k).trace = mean(handles.mov(dend_pixel,:),1)';        
-        handles.dendrite(k).linewidth = linewidth;
+        handles.dendrite(k1).dend_pixel = dend_pixel;
+        handles.dendrite(k1).dend_outline = dend_outline;
+        handles.dendrite(k1).points = pt_all;
+        handles.dendrite(k1).dend_line = cspoints';
+        handles.dendrite(k1).trace = mean(handles.mov(dend_pixel,:),1)';        
+        handles.dendrite(k1).linewidth = linewidth;
         handles.roimask = handles.roimask + bw;
-    else
-        handles.dendrite(k).dend_pixel = [];
-        handles.dendrite(k).dend_outline = [];
-        handles.dendrite(k).points = [];
-        handles.dendrite(k).dend_line = [];
-        handles.dendrite(k).trace = [];         
-        handles.dendrite(k).linewidth = [];
+        k1 = k1+1;
+%     else
+%         handles.dendrite(k).dend_pixel = [];
+%         handles.dendrite(k).dend_outline = [];
+%         handles.dendrite(k).points = [];
+%         handles.dendrite(k).dend_line = [];
+%         handles.dendrite(k).trace = [];         
+%         handles.dendrite(k).linewidth = [];
     end
 end
-dendriteROI = handles.dendrite;
-if exist(fullfile(handles.savepath, handles.savename), 'file')==0
-    save(fullfile(handles.savepath, handles.savename), 'im_norm', 'dendriteROI')       
-else
-    save(fullfile(handles.savepath, handles.savename), 'im_norm', 'dendriteROI', '-append')
-end
+
+% dendriteROI = handles.dendrite;
+% if exist(fullfile(handles.savepath, handles.savename), 'file')==0
+%     save(fullfile(handles.savepath, handles.savename), 'im_norm', 'dendriteROI','-v7.3')       
+% else
+%     save(fullfile(handles.savepath, handles.savename), 'im_norm', 'dendriteROI','-append')
+% end

@@ -181,8 +181,8 @@ if get(hObject, 'Value') == 0
     set(handles.ind_subsample, 'Enable', 'off');
 else
     set(handles.ind_subsample, 'Enable', 'on'); 
-    set(handles.ind_subsample, 'String', '10'); 
-    handles.subsampleRate = 0.1;
+    set(handles.ind_subsample, 'String', '1'); 
+    handles.subsampleRate = 0.01;
 end
 guidata(hObject, handles);
 
@@ -237,7 +237,7 @@ guidata(hObject, handles);
 
 function reg_MasterButton_Callback(hObject, eventdata, handles)
 if handles.savesubsampletif == 1 && handles.subsampleRate==0
-    handles.subsampleRate = 0.1;
+    handles.subsampleRate = 0.01;
     set(handles.ind_subsample, 'String', num2str(handles.subsampleRate*100))
     drawnow
 end
@@ -246,11 +246,8 @@ if ~isempty(handles.Datalist)
     if not(exist(handles.savepath, 'dir'))
         mkdir(handles.savepath)           
     end
-%     if handles.crossSessionReg==0
-        [handles, RegPara] = callregistration(handles);
-%     else
-%         [handles, RegPara] = callregistration_crossStack(handles);
-%     end        
+    [handles, RegPara] = callregistration(handles);
+     
     handles.savingflag = 0;
 end
 msgbox('Batch registration finished');

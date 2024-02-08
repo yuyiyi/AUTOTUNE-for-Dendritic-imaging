@@ -1,18 +1,29 @@
-function Save_SingleData_bin(handles, f_wait)
+function Save_SingleData_bin(handles, f_wait, ifhold)
 if nargin == 1
     f_wait = waitbar(0.2,'Saving');
 end
+if nargin < 3
+    ifhold = 1;
+end
 moviedir = fullfile(handles.filepath, handles.filename);
 im_norm = handles.im_norm;
+Feature_parameters = handles.defaultPara;
+Feature_parameters.BitsPerSample = handles.BitsPerSample;
+Feature_parameters.bytesPerImage = handles.bytesPerImage;
+Feature_parameters.RawPrecision = handles.RawPrecision;
+Feature_parameters.imagelength = handles.imagelength;
+Feature_parameters.imagesize = handles.size;
+Feature_parameters.useGPU = handles.useGPU;
 if exist(fullfile(handles.savepath, handles.savename), 'file')==0
-    save(fullfile(handles.savepath, handles.savename), 'im_norm', 'moviedir', '-v7.3')
+    save(fullfile(handles.savepath, handles.savename), 'im_norm', 'moviedir','Feature_parameters', '-v7.3')
 else
-    save(fullfile(handles.savepath, handles.savename), 'im_norm', 'moviedir', '-append')
+    save(fullfile(handles.savepath, handles.savename), 'im_norm', 'moviedir','Feature_parameters', '-append')
 end
 if ~isempty(handles.Regfile)
     RegResult = handles.Regfile;
     save(fullfile(handles.savepath, handles.savename), 'RegResult', '-append')
 end
+grad = handles.movieinputgrad;
 
 dendriteROI = [];
 spineROI = [];
@@ -29,10 +40,18 @@ if ~isempty(handles.dend_shaft)
     if ~isfield(dend_shaft, 'dendloc_linear')
         dend_shaft = shaftloc(dend_shaft, dendriteROI);
     end
+    if ~isfield(dend_shaft, 'shaft_trace') && grad == 1
+        for i = 1:length(dend_shaft)
+            pointID = dend_shaft(i).shaft_pixel;
+            tracetmp = mean(handles.mov(pointID,:),1)';
+            dend_shaft(i).shaft_trace = tracetmp; 
+        end
+    end
 end
+
 if ~isempty(dendriteROI) && ~isempty(spineROI)
     if ~isfield(spineROI, 'dendriteID') || ~isfield(spineROI, 'dendloc_linear')
-    [nearestID, dend_arcloc, dendloc] = nearestDendrite(roi_seed, dendriteROI, handles);
+    [nearestID, dend_arcloc, dendloc] = nearestDendrite(roi_seed, dendriteROI, handles, ifhold);
     i = 0;
     for k = 1:length(spineROI)
         if ~isempty(spineROI(k).roi_seed)
@@ -45,7 +64,6 @@ if ~isempty(dendriteROI) && ~isempty(spineROI)
     end
 end
 
-grad = handles.movieinputgrad;
 if grad > 1 
     [Ly, Lx] = size(handles.im_norm);
     binfilelist = handles.RegPara.savename;

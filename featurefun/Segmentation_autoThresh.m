@@ -6,8 +6,12 @@ scrsz = get(groot,'ScreenSize');
 pos_seg = round([scrsz(3)*0.1 scrsz(4)*0.55 scrsz(3)*0.4 scrsz(4)/3]);
 mov = handles.mov;
 mov2d_filt = handles.mov2d_filt;
-areathreshold = 5;
-w = min([handles.linewidth, 6])*3;
+%%%%%% setup parameters
+areathreshold = handles.defaultPara.minarea;
+th_grad = handles.defaultPara.th_grad;
+linewidth = handles.linewidth;
+w = linewidth*handles.defaultPara.w;
+
 d1 = handles.size(1);
 d2 = handles.size(2);    
 pt = handles.pt;
@@ -45,19 +49,19 @@ if ~isempty(pt)
         th_80 = quantile(cov_nbd(:), 0.8);
         th_max = max(cov_nbd(:));
         th_min = quantile(cov_nbd(:), 0.01);
-        th = max(th_80, (th_max-th_min)/2+th_min);
+        th = max(th_80, (th_max-th_min)/th_grad+th_min);
         tmpInd = linearInd(cov_nbd>=th);
         trail = mean(mov2d_filt(tmpInd,:),1)';
         %%%% polish auto segmentation
         cov_nbd = reshape(corr(double(trail), double(mov2d_filt(linearInd,:))'),d3,d4);
-%         assignin('base', 'cov_nbd', cov_nbd)
         % segmentation 
         bw_covm = zeros(size(cov_nbd));
         bw_result = zeros(size(cov_nbd));
+        
         th_80 = quantile(cov_nbd(:), 0.8);
         th_max = max(cov_nbd(:));
         th_min = quantile(cov_nbd(:), 0.01);
-        th = max(th_80, (th_max-th_min)/2+th_min);
+        th = max(th_80, (th_max-th_min)/th_grad+th_min);
         bw_covm(cov_nbd>th) = 1;
         bw_covm = bwmorph(bw_covm,'hbreak');
         bw_covm = bwmorph(bw_covm,'open');

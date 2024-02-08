@@ -1,6 +1,8 @@
 function [loadmovieflag, I1, Mem_max, w, handles] = loadmovie_init(handles)
 
 loadmovieflag = 0;
+w = [];
+I1 = [];
 [imagefolder, imagefilename, fext] = fileparts(handles.filename);
 handles.fext = fext;
 savename = [regexprep(imagefilename,' ', '_'), '_roi.mat'];

@@ -6,9 +6,15 @@ scrsz = get(groot,'ScreenSize');
 pos_seg = round([scrsz(3)*0.1 scrsz(4)*0.55 scrsz(3)*0.4 scrsz(4)/3]);
 mov = handles.mov;
 mov2d_filt = handles.mov2d_filt;
-areathreshold = 5;
+%%%%%% setup parameters
+areathreshold = handles.defaultPara.minarea;
+th_grad = handles.defaultPara.th_grad;
 linewidth = handles.linewidth;
-w = linewidth*3;
+w = linewidth*handles.defaultPara.w;
+MaxAR = handles.defaultPara.MaxAR;
+maxareagrad = handles.defaultPara.maxareagrad;
+maxarea = maxareagrad * linewidth;
+
 d1 = handles.size(1);
 d2 = handles.size(2);    
 ptbatch = handles.pt;
@@ -60,7 +66,7 @@ if ~isempty(ptbatch)
             th_80 = quantile(cov_nbd(:), 0.8);
             th_max = max(cov_nbd(:));
             th_min = quantile(cov_nbd(:), 0.01);
-            th = max(th_80, (th_max-th_min)/2+th_min);
+            th = max(th_80, (th_max-th_min)/th_grad+th_min);
             tmpInd = linearInd(cov_nbd>=th);
             trail = mean(mov2d_filt(tmpInd,:),1)';
             %%%% polish auto segmentation
@@ -72,7 +78,7 @@ if ~isempty(ptbatch)
             th_80 = quantile(cov_nbd(:), 0.8);
             th_max = max(cov_nbd(:));
             th_min = quantile(cov_nbd(:), 0.01);
-            th = max(th_80, (th_max-th_min)/2+th_min);
+            th = max(th_80, (th_max-th_min)/th_grad+th_min);
             bw_covm(cov_nbd>th) = 1;
             bw_covm = bwmorph(bw_covm,'hbreak');
             bw_covm = bwmorph(bw_covm,'open');
@@ -121,7 +127,8 @@ if ~isempty(ptbatch)
         end
         % plot traces
         Temptrace = zeros(handles.size(3),1);
-        if sum(tempRoi(:))>sum(handles.linewidth.^2)/2 && ar < 4
+%         if sum(tempRoi(:))>sum(handles.linewidth.^2)/2 && ar < 4
+        if sum(tempRoi(:))>maxarea && ar < MaxAR
             tmp = mov(tempRoi(:)==1,:);
             Temptrace = mean(double(tmp), 1)';
             roimask = roimask-tempRoi;

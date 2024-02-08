@@ -1,10 +1,13 @@
 function handles = featuredetect_batch_init(handles, batchini)
 close(figure(7))  % cross-session registration
 if batchini
+    para_default = defaultparameter;
     handles.savingflag = 0;
-    handles.defaultvalue = 0.6;
-    handles.thresh = handles.defaultvalue;
-    handles.linewidth = 6;
+    % handles.defaultvalue = 0.6;
+    % handles.thresh = handles.defaultvalue;
+    handles.linewidth = para_default.linewidth; 
+    handles.defaultPara = para_default;
+
     handles.savenamelist = '';
     handles.filepath = '';
 
@@ -45,7 +48,6 @@ end
 handles.savename = '';
 handles.filename = '';
 handles.fext = '';
-
 handles.movieinputgrad = 1;
 handles.imagelength = [];
 handles.imageinfo = [];

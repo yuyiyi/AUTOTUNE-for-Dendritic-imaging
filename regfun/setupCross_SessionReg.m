@@ -3,26 +3,20 @@ function [R_points, t_points, im_mask_reg, handles] =...
 
 %%%% im_mask_reg is a transformed version of im_mask to match
 %%%% im_current
-% handles.roimask = [];
-% handles.pt = [];
-% handles.tempRoi = [];
-% handles.Temptrace = [];
-% handles.id = 0;
-% handles.roi_seed = [];
-% handles.roi = [];
-% handles.trace = [];
-% handles.spineROI = [];
-% handles.dendrite = [];
-% handles.dend_shaft = [];
 im_current = handles.im_norm;
-ops.maxIter = 150;
-ops.tot = 10^-4;
-ops.distTh = [2, 50];
-ops.dispreg = 0;
+% ops.maxIter = 150;
+% ops.tot = 10^-4;
+% ops.distTh = [2, 50];
+% ops.dispreg = 0;
+%%%%%% cross-session alignment
+ops = handles.defaultPara.ops;
 ops.R0 = eye(3);
 ops.t0 = zeros(3,1);
 ops.fixed = im_mask;
 ops.moving = im_current;
+sigma = ops.pointsdetection(1); % 2
+quant = ops.pointsdetection(2); % 2.5
+pointmode = ops.pointsdetection(3); % 2
 
 cc1 = 0;
 cc0 = 0;
@@ -36,7 +30,7 @@ t_points_all = [];
 [d1,d2] = size(im_current);
 [d3,d4] = size(im_mask);
 
-[IIM, JJM, deltaI, Iabs, Imap] = pointfeature_detect2(im_current,2, 2.5, 0, 2);
+[IIM, JJM, deltaI, Iabs, Imap] = pointfeature_detect2(im_current,sigma, quant, ops.dispreg, pointmode);
 data2 = [JJM, IIM];
 if withrotation == 0 && d1==d3 && d2==d4
     [dv, ~, im_mask_reg] = phase_reg(im_mask, im_current);
@@ -45,7 +39,7 @@ if withrotation == 0 && d1==d3 && d2==d4
 else
     while cc1<0.9 && iter<= 5
         im_mask = im_mask_reg0;
-        [IIM, JJM, deltaI1, Iabs1, Imap1] = pointfeature_detect2(im_mask, 2, 2.5, 0, 2);
+        [IIM, JJM, deltaI1, Iabs1, Imap1] = pointfeature_detect2(im_mask, sigma, quant, ops.dispreg, pointmode);
         data1 = [JJM, IIM];
 
         data3 = [data1';0.01*randn(1,size(data1,1))];
@@ -113,7 +107,7 @@ subplot(122), imshowpair(imadjust(im_mask_reg), imadjust(im_current),'Scaling','
 set(gca, 'Ydir', 'reverse')
 title('Registered')
 %%%% transform im_mask feature to match im_current features
-[IIM, JJM, deltaI1, Iabs1, Imap1] = pointfeature_detect2(im_mask, 2, 2.5, 0, 2);
+[IIM, JJM, deltaI1, Iabs1, Imap1] = pointfeature_detect2(im_mask, sigma, quant, ops.dispreg, pointmode);
 data1 = [JJM, IIM];
 R_points = R_points_tot;
 t_points = t_points_tot;
@@ -135,7 +129,7 @@ im_target_postreg = im_mask_reg;
 if ~isempty(handles.savepath)
     if exist(fullfile(handles.savepath, handles.savename), 'file')==0
         save(fullfile(handles.savepath, handles.savename), ...
-            'R_points', 't_points', 'im_target', 'im_target_postreg', 'maskdir')
+            'R_points', 't_points', 'im_target', 'im_target_postreg', 'maskdir', '-v7.3')
     else
         save(fullfile(handles.savepath, handles.savename), ...
             'R_points', 't_points', 'im_target', 'im_target_postreg', 'maskdir', '-append')

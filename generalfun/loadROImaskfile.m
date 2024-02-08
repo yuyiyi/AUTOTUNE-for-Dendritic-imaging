@@ -1,4 +1,4 @@
-function [im_mask, roi_seed_master, dendriteROI_mask, shaft_flag, dendID] ...
+function [im_mask, roi_seed_master, dendriteROI_mask, shaft_flag, dendID, defaultPara] ...
     = loadROImaskfile(maskfilepath, maskfilename)
 shaft_flag = 0;
 dendID = [];
@@ -45,3 +45,18 @@ if ismember('shaft_flag', variableinfo)
     load(fullfile(maskfilepath, maskfilename), 'shaft_flag')
 end
 
+if ismember('Feature_parameters', variableinfo)
+    load(fullfile(maskfilepath, maskfilename), 'Feature_parameters')
+    defaultPara.GaussKernel = Feature_parameters.GaussKernel;
+    defaultPara.maxLength = Feature_parameters.maxLength;
+    defaultPara.linewidth = Feature_parameters.linewidth;
+    defaultPara.th_grad = Feature_parameters.th_grad;
+    defaultPara.w = Feature_parameters.w;
+    defaultPara.minarea = Feature_parameters.minarea;
+    defaultPara.maxareagrad = Feature_parameters.maxareagrad;
+    defaultPara.MaxAR = Feature_parameters.MaxAR;
+    defaultPara.autofeature = Feature_parameters.autofeature;
+    defaultPara.shaftlength = Feature_parameters.shaftlength;
+    defaultPara.ops = Feature_parameters.ops;
+    defaultPara.RegPara = Feature_parameters.RegPara;    
+end

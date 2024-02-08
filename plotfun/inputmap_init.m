@@ -55,5 +55,9 @@ handles.cfeature_filt = [];
 handles.cfeature_trace = [];
 handles.feature_title = [];
 
+para_default = defaultparameter;
+handles.defaultPara = para_default;
+
+
 clc
 

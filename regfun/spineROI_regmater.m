@@ -6,8 +6,8 @@ im_norm = handles.im_norm;
 d1 = handles.size(1);
 d2 = handles.size(2);    
 
-handles.id = size(roi_seed_master,1);
 clear spineROI
+k1 = 1;
 for ii = 1:size(roi_seed_master,1)
     pt = roi_seed(ii,:);    
     if min(d2-2-pt(1), d1-2-pt(2))>0 && min(pt(1), pt(2))>=3 
@@ -22,10 +22,7 @@ for ii = 1:size(roi_seed_master,1)
         tempRoi = zeros(handles.size(1:2));
         Temptrace = zeros(handles.size(3),1);
         if ~isempty(handles.pt)
-            if min(round(handles.pt))<0 || round(handles.pt(1))>d2 || round(handles.pt(2))>d1
-                handles.roi(:,:,ii) = tempRoi;
-                handles.trace(:,ii) = nan(handles.size(3),1);
-            else
+            if min(round(handles.pt))>0 && round(handles.pt(1))<d2 && round(handles.pt(2))<d1
                 [Temptrace, tempRoi, handles] = Segmentation_autoThresh(handles, 0);
                 if sum(tempRoi(:)) == 0
                     pt = handles.pt;
@@ -36,32 +33,28 @@ for ii = 1:size(roi_seed_master,1)
                 end
                 handles.tempRoi = tempRoi;
                 handles.Temptrace = Temptrace;
+                handles.roi(:,:,k1) = tempRoi;
+                handles.trace(:,k1) = Temptrace;
+                handles.roi_seed(k1,:) = handles.pt;
+                spineROI(k1).roi_seed = handles.pt;
+                bw = tempRoi;
+                spineROI(k1).spine_pixel = find(bw==1);
+                spineROI(k1).spine_trace = Temptrace;
+                if ~isempty(dendID_master)
+                    spineROI(k1).dendriteID = dendID_master(ii);
+                end
+                k1 = k1+1;
             end
         end
-        handles.roi(:,:,ii) = tempRoi;
-        handles.trace(:,ii) = Temptrace;
-        handles.roi_seed(ii,:) = handles.pt;
-        spineROI(ii).roi_seed = handles.pt;
-        bw = tempRoi;
-        spineROI(ii).spine_pixel = find(bw==1);
-        spineROI(ii).spine_trace = Temptrace;
-    else
-        handles.roi(:,:,ii) = zeros(d1, d2);
-        handles.trace(:,ii) = zeros(handles.size(3),1);
-        handles.roi_seed(ii,:) = [nan nan];        
-        spineROI(ii).roi_seed = [];
-        spineROI(ii).spine_pixel = [];
-        spineROI(ii).spine_trace = [];
-    end
-    if ~isempty(dendID_master)
-        spineROI(ii).dendriteID = dendID_master(ii);
     end
 end
 
 handles.spineROI = spineROI;
-if exist(fullfile(handles.savepath, handles.savename), 'file')==0
-    save(fullfile(handles.savepath, handles.savename), 'im_norm',  'spineROI')
-else
-    save(fullfile(handles.savepath, handles.savename), 'im_norm', 'spineROI', '-append')
-end
+handles.id = length(spineROI);
+
+% if exist(fullfile(handles.savepath, handles.savename), 'file')==0
+%     save(fullfile(handles.savepath, handles.savename), 'im_norm',  'spineROI', -v7.3)
+% else
+%     save(fullfile(handles.savepath, handles.savename), 'im_norm', 'spineROI', '-append')
+% end
 

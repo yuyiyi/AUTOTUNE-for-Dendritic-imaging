@@ -144,8 +144,9 @@ function LoadROImask_check_Callback(hObject, eventdata, handles)
 if get(hObject, 'Value') == 1
     [maskfilename, maskfilepath, indx] = uigetfile({'*.mat';'*.*'}, 'Select existing feature map');
     if indx > 0 
-       [im_mask, roi_seed_master, dendriteROI_mask, shaft_flag, dendID] =...
-            loadROImaskfile(maskfilepath, maskfilename);
+       [im_mask, roi_seed_master, dendriteROI_mask, shaft_flag, dendID, defaultPara] ...
+            = loadROImaskfile(maskfilepath, maskfilename);
+       handles.defaultPara = defaultPara;
        handles.maskdir = fullfile(maskfilepath, maskfilename);
        set(handles.edittext_maskpath, 'String', handles.maskdir);
        if (~isempty(roi_seed_master) || ~isempty(dendriteROI_mask)) && ~isempty(im_mask)
