@@ -122,6 +122,8 @@ else
             end
             save(fullfile(datafilepath, datafilename), 'spineROI', '-append')
         end
+        handles.spineROI = spineROI;
+        handles.im_norm = im_norm;
         spine_dff = [spineROI.spine_dff];
         spine_trace = [spineROI.spine_trace];
         if isfield(spineROI, 'BAP_current')
@@ -136,6 +138,10 @@ else
         if isfield(spineROI, 'dff_filt')
             spine_filt = [spineROI.dff_filt];
         end
+        assignin('base', 'handles', handles)
+        assignin('base', 'roi_seed', roi_seed)
+        assignin('base', 'dendriteROI', dendriteROI)
+        
         if ~isempty(dend_line_all)
             if ~isfield(spineROI, 'dendriteID') || ~isfield(spineROI, 'dendloc_linear')
                 [nearestID, dend_arcloc, dendloc] = nearestDendrite(roi_seed, dendriteROI, handles);

@@ -8,7 +8,7 @@ im_norm = handles.im_norm;
 % assignin('base', 'handles', handles);
 [d1,d2] = size(im_norm);
 r = min(scrsz(3)/3*2/d2, (scrsz(4))/d1)/2;
-pos_spine = round([scrsz(3)/3 100 r*d2 r*d1]);
+pos_spine = round([100 100 500 700]);
 if isempty(findobj('type','figure','number',15))
     pos = pos_spine;    
 else

@@ -53,18 +53,11 @@ function AUTOTUNE_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to AUTOTUNE (see VARARGIN)
 mainpath = mfilename('fullpath');
 [ filepath , name , ext ] = fileparts( mainpath );
-if ~exist('featurefun', 'dir')
 addpath(fullfile(filepath,'featurefun'))
-end
-if ~exist('generalfun', 'dir')
 addpath(fullfile(filepath,'generalfun'))
-end
-if ~exist('regfun', 'dir')
-addpath(fullfile(filepath,'regfun'))
-end
-if ~exist('plotfun', 'dir')
+addpath(fullfile(filepath,'featurefun'))
+addpath(fullfile(filepath,'util'))
 addpath(fullfile(filepath,'plotfun'))
-end
 % Choose default command line output for AUTOTUNE
 handles.output = hObject;
 

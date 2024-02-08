@@ -139,7 +139,10 @@ guidata(hObject, handles);
 function datalist_tbl_CellSelectionCallback(hObject, eventdata, handles)
 dataID = eventdata.Indices(1);
 handles = loadtrace(handles, dataID);
-handles = inputmap_refreshplot(handles, dataID);
+[trace_stamp, trace_num, ttlabel] = pooltrace(handles);
+% [varsel] = Selfeature(handles, ttlabel, mainfig_pos);
+SelectfeatureForVisual(handles)
+% handles = inputmap_refreshplot(handles, dataID);
 guidata(hObject, handles);
 
 % -----------------------------Load Data -------------------------------
