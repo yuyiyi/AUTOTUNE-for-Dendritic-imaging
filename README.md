@@ -9,6 +9,7 @@ Follow these three steps to get started quickly, from installation to working th
 
 ### Step 1: Install AUTOTUNE
 If not already have Matlab installed, please install Matlab R2019a or higher. Download the GitHub repository of AUTOTUNE and put it in your local Matlab path. 
+Require Image Processing Toolbox
 
 ### Step 2: Try out a demo 
 
