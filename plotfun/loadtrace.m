@@ -98,7 +98,7 @@ else
 
     if ~isempty(spineROI) 
         roi_seed = reshape([spineROI.roi_seed], 2,[])';
-        rois = [];
+        rois = []; 
         for i = 1:length(spineROI)
             roitmp = zeros(size(im_norm,1)*size(im_norm,2), 1);
             if ~isempty(spineROI(i).spine_pixel)
@@ -136,6 +136,7 @@ else
 
         if ~isempty(dendriteROI)
             handles.im_norm = im_norm;
+            handles.spineROI = spineROI;
             if ~isfield(spineROI, 'dendriteID') || ~isfield(spineROI, 'dendloc_linear')
                 [nearestID, dend_arcloc, dendloc] = nearestDendrite(roi_seed, dendriteROI, handles);
                 i = 0;

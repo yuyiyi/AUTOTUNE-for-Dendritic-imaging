@@ -109,7 +109,11 @@ else
                     StampRespFit.coltitle = ttlabel;
                     savevariblename = sprintf('StampRespFit_%s%s', figtitle, nameappend);
                     handles.StampRespFit = StampRespFit;
+                    handles.MetaInfor.StampRespfiltertype = figtitle;
+                    handles.MetaInfor.StampRespfilterFunc = fmodel;
                     if dosave==1 
+                        MetaInfor = handles.MetaInfor;
+                        save(fullfile(handles.datafilepath, handles.datafilename{k}), 'MetaInfor', '-append')
                         tempdata.(savevariblename) = StampRespFit;
                         save(fullfile(handles.datafilepath, handles.datafilename{k}),...
                             '-struct','tempdata', savevariblename, '-append')

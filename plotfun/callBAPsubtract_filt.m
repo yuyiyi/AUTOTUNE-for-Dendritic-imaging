@@ -75,5 +75,6 @@ if ~isempty(handles.dend_shaft)
     handles.dend_shaft = dend_shaft;
     save(fullfile(handles.datafilepath, handles.datafilename{dataID}), 'dend_shaft', '-append')
 end
-notesBAPremoval = 'BAPremoval on filtered trace';
-save(fullfile(handles.datafilepath, handles.datafilename{dataID}), 'notesBAPremoval', '-append')
+handles.MetaInfor.notesBAPremoval = 'BAPremoval on filtered trace';
+MetaInfor = handles.MetaInfor;
+save(fullfile(handles.datafilepath, handles.datafilename{dataID}), 'MetaInfor', '-append')

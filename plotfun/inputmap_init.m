@@ -55,9 +55,15 @@ handles.cfeature_filt = [];
 handles.cfeature_trace = [];
 handles.feature_title = [];
 
+% setup default parameters
 para_default = defaultparameter;
 handles.defaultPara = para_default;
 
-
+handles.MetaInfor.tracefiltertype = '';        
+handles.MetaInfor.tracefilterparameter = [];
+handles.MetaInfor.notesBAPremoval = '';
+handles.MetaInfor.StampRespfiltertype = '';
+handles.MetaInfor.StampRespfilterFunc = '';
+handles.MetaInfor.BehRespCond = '';
 clc
 

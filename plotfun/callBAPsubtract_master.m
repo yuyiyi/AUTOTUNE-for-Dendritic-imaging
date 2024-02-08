@@ -76,5 +76,6 @@ if ~isempty(handles.dend_shaft)
     save(fullfile(handles.datafilepath, handles.datafilename{dataID}), 'dend_shaft', '-append')
 end
 
-notesBAPremoval = 'BAPremoval on df/f';
-save(fullfile(handles.datafilepath, handles.datafilename{dataID}), 'notesBAPremoval', '-append')
+handles.MetaInfor.notesBAPremoval = 'BAPremoval on raw dff';
+MetaInfor = handles.MetaInfor;
+save(fullfile(handles.datafilepath, handles.datafilename{dataID}), 'MetaInfor', '-append')

@@ -1,16 +1,25 @@
 function [stampsel, varsel, trialsel, trialIDsel, condsel, plotwin,...
     neusel, dosave, varNames] = ...
     prepBehResp(handles, ttlabel, mainfig_pos)
+    notes = '';
     dosave = 0;
-    varsel = [1, 1];
-    stampsel = '';
-    trialsel = '';
-    condsel = '';
-    plotwin = '';
-    trialIDsel = [];
     neusel = [];
-    varlist = {'None'};
-
+    % set up primary behavior parameter for analysis (eg. motion vs. stationary)
+    stampsel = ''; % select the primary parameter for analysis    
+    varlist = {'None'}; % list of values for selected parameter (temp)
+    varsel = [1, 1]; % set the rule for segment the trace (eg. > 0)
+    
+    % set up trial information for averaging over trials or for analysis on
+    % different trial conditions
+    trialsel = '';
+    trialIDsel = [];
+    % select the column indicates trial conditions for cross-type analysis
+    condsel = '';
+    
+    % set up the time duration for analysis  
+    plotwin = '';
+    
+    % variable names (behavior session parameters)
     stampinfo = handles.stampinfo{1};
     varNames = stampinfo.Properties.VariableNames;    
     N = length(varNames);
@@ -42,7 +51,6 @@ function [stampsel, varsel, trialsel, trialIDsel, condsel, plotwin,...
         'Position',[0.05 0.35 0.2 0.1],...
         'FontSize', 10, ...
         'string', 'k');
-
     velgrad = uicontrol('Parent',panel1, 'Style', 'popupmenu',...
         'Units', 'normalized',...
         'Position',[0.2 0.4 0.3 0.08],...

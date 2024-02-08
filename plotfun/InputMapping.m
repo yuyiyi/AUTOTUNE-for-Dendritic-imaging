@@ -211,7 +211,7 @@ if length(handles.datafilename)>=1 && (handles.plotRawdff==1 || handles.plotFilt
                 handles = callBAPsubtract_master(handles, k);
             elseif handles.plotFiltdff == 1
                 handles = callBAPsubtract_filt(handles, k);
-            end                
+            end        
         end
     end
 else
@@ -228,6 +228,8 @@ if length(handles.datafilename)>=1
     [v, smoothwin] = prep_filt(handles);
     if v==2        
         [fps, w1, w2] = call_gaussfilt(handles);
+        handles.MetaInfor.tracefiltertype = 'Gaussfilter on raw trace';        
+        handles.MetaInfor.tracefilterparameter = [fps, w1, w2];
         if ~isempty(fps)
             for k = 1:length(handles.datafilename)
                 handles = callgaussfilt_master(handles, k, fps, w1, w2);
@@ -236,6 +238,8 @@ if length(handles.datafilename)>=1
             msgbox('no fps value')
         end
     elseif v==1
+        handles.MetaInfor.tracefiltertype = 'Moving average on raw trace';        
+        handles.MetaInfor.tracefilterparameter = smoothwin;
         for k = 1:length(handles.datafilename)
             handles = callsmoothfilt_master(handles, k, smoothwin);
         end

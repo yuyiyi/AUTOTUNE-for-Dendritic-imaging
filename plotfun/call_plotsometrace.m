@@ -12,7 +12,6 @@ for k = 1:length(handles.datafilename)
     end
     %%%%% pool all trace for analysis
     [trace_stamp1, trace_num1, ttlabel1] = pooltrace(handles);
-
     ttlabel_pool(1:length(ttlabel1),k) = ttlabel1;
     trace_stamp_pool(k).trace_stamp = trace_stamp1;
     trace_num_all(k) = trace_num1;
@@ -24,7 +23,8 @@ end
             pos_BAPremove = round([50 50 min(scrsz(3)/2,600) scrsz(4)*0.8]);
             pos = pos_BAPremove;    
         for i1 = 1:ceil(size(neusel,1)/10)
-            hplot = figure(22); clf('reset')
+            hplot = figure(22+i1); clf('reset')
+            pos(1) = pos(1) + 20;
             set(hplot,'Name', 'Click on the figure to show more traces' ,'Position', pos);
             for i2 = 1:10
                 i = i2+(i1-1)*10;
@@ -35,9 +35,9 @@ end
                     title(['dataset', num2str(b), '  ', ttlabel_pool{a,b}])
                 end
             end
-            if i1 < ceil(size(neusel,1)/10)
-                waitforbuttonpress
-            end
+%             if i1 < ceil(size(neusel,1)/10)
+%                 waitforbuttonpress
+%             end
         end
     else
         traceplot22(handles)

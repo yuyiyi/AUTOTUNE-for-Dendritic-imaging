@@ -56,5 +56,5 @@ if ~isempty(handles.cfeature_dff)
     save(fullfile(handles.datafilepath, handles.datafilename{dataID}), 'dff_gaussfilt', '-append')
     handles.Gaussfilttrace = 1;
 end
-notesfilt = 'smooth by moving average';
-save(fullfile(handles.datafilepath, handles.datafilename{dataID}), 'notesfilt', '-append')
+MetaInfor = handles.MetaInfor;
+save(fullfile(handles.datafilepath, handles.datafilename{dataID}), 'MetaInfor', '-append')
