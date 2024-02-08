@@ -5,7 +5,7 @@ for k = 1:length(handles.datafilename)
     handles = loadtrace(handles, k);
     framestamp = handles.framestamp{1};
     stampinfo = handles.stampinfo{1};
-    if handles.plotRawdff == 0 && handles.plotBAPdff == 0
+    if handles.plotRawdff == 0 && handles.plotBAPdff == 0 && handles.plotFiltdff == 0
         handles.plotRawdff = 1;
         set(handles.useBAPremove, 'Value', 0)
         set(handles.useRawtrace, 'Value', 1)        

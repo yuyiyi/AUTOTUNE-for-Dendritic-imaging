@@ -6,7 +6,13 @@ for k = 1:length(handles.datafilename)
     if handles.plotRawdff == 0 && handles.plotBAPdff == 0 && handles.plotFiltdff == 0
         handles.plotRawdff = 1;
         set(handles.useBAPremove, 'Value', 0)
-        set(handles.useRawtrace, 'Value', 1)        
+        set(handles.useRawtrace, 'Value', 1) 
+    elseif handles.plotRawdff == 1
+        nameappend = '_raw';
+    elseif handles.plotBAPdff == 1 
+        nameappend = '_BAPremove';
+    elseif handles.plotFiltdff == 1 
+        nameappend = '_filt';       
     end
     %%%%% pool all trace for analysis
     [trace_stamp1, trace_num1, ttlabel1] = pooltrace(handles);
@@ -85,7 +91,8 @@ else
                     StampResp.coltitle = ttlabel;
                     handles.StampResp = StampResp;
                     if dosave==1
-                        save(fullfile(handles.datafilepath, handles.datafilename{k}), 'StampResp', '-append')
+                        save(fullfile(handles.datafilepath, handles.datafilename{k}),...
+                            ['StampResp', nameappend], '-append')
                     end            
                 elseif funcsel > 1 && ~isempty(fmodel)
                     figiniID = 500+k1;
@@ -100,7 +107,7 @@ else
                     StampRespFit.ydata = y;            
                     StampRespFit.stamplabel = xvalue;
                     StampRespFit.coltitle = ttlabel;
-                    savevariblename = sprintf('StampRespFit_%s', figtitle);
+                    savevariblename = sprintf('StampRespFit_%s%s', figtitle, nameappend);
                     handles.StampRespFit = StampRespFit;
                     if dosave==1 
                         tempdata.(savevariblename) = StampRespFit;
