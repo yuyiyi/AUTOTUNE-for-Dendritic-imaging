@@ -90,11 +90,19 @@ if indx > 0
         handles.batchdata = 0;
         handles.datafilename = {datafilename};
     end
+
     handles.datanames = "";
     for k = 1:length(handles.datafilename)
         filenamePieces = split(handles.datafilename{k}, '.');
-        handles.datanames(k) = string(filenamePieces{1});
+        A = filenamePieces{1};
+        A = A(~isspace(A));
+        newStr = erase(A, '-');
+        if length(newStr)>60
+            newStr = newStr(1:60);
+        end
+        handles.datanames(k) = string(newStr);
     end
+
     handles.datafilepath = datafilepath;
     handles = inputmap_init(handles);
     assignin('base', 'handles', handles)

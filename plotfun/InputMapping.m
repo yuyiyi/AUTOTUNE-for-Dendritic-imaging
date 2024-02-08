@@ -184,7 +184,13 @@ if indx > 0
     handles.datanames = "";
     for k = 1:length(handles.datafilename)
         filenamePieces = split(handles.datafilename{k}, '.');
-        handles.datanames(k) = string(filenamePieces{1});
+        A = filenamePieces{1};
+        A = A(~isspace(A));
+        newStr = erase(A, '-');
+        if length(newStr)>60
+            newStr = newStr(1:60);
+        end
+        handles.datanames(k) = string(newStr);
     end
 
     set(handles.useBAPremove, 'Value', 0)
