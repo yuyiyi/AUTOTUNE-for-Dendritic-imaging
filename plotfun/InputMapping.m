@@ -82,7 +82,7 @@ function uit_CreateFcn(hObject, eventdata, handles)
 set(hObject, 'Data', {})
 guidata(hObject, handles);
 
-% function uit_CellEditCallback(hObject, eventdata, handles)
+function uit_CellEditCallback(hObject, eventdata, handles)
 %     newstamp = get(handles.uit, 'Data');
 %     stampinfo = newstamp(:,2)';
 %     for k = 1:length(handles.datafilename)
@@ -90,6 +90,7 @@ guidata(hObject, handles);
 %     end
 %     handles.stampinfo = stampinfo;
 % guidata(hObject, handles);
+
 function useRawtrace_Callback(hObject, eventdata, handles)
 handles.plotRawdff = get(hObject, 'Value');
 if get(hObject, 'Value') == 1

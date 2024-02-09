@@ -24,8 +24,8 @@ if ~isempty(handles.Regfile)
     save(fullfile(handles.savepath, handles.savename), 'RegResult', '-append')
 end
 
+dendriteROI = handles.dendrite;
 if ~isempty(handles.dendrite)
-    dendriteROI = handles.dendrite;
     for i = 1:length(dendriteROI)
         dend_dff = [];
         dend_trace_current = dendriteROI(i).trace;

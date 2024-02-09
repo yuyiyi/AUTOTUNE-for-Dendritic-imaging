@@ -144,9 +144,13 @@ for n = 1:size(value_g, 2)
         cc = nanmean(y)/(nanmean(xx.^2)+eps);
        while iter<=MaxIter
             if funcsel== 2 % 1 Gaussian fitting                
-                [fitobject1, gof1] = fit(xx, y, fmodel, 'Startpoint', [1,xx(a), median(xx)/2]);
+                [fitobject1, gof1] = fit(xx, y, fmodel, ...
+                    'Startpoint', [1,xx(a), median(xx)/2], 'upper', [max(y),max(xx), max(xx)]);
             elseif funcsel== 3 % 2 Gaussian fitting
-                [fitobject1, gof1] = fit(xx, y, fmodel, 'Startpoint', [1,1,xx(a), median(xx)/2, median(xx)/2]);
+                [fitobject1, gof1] = fit(xx, y, fmodel, ...
+                    'Startpoint', [1,1,xx(a), median(xx)/2, median(xx)/2],...
+                    'upper', [max(y),max(y),max(xx), max(xx), max(xx)],...
+                    'lower', [min(y),min(y),min(xx), eps, eps]);
             elseif funcsel ==4 % linear
                 [fitobject1, gof1] = fit(xx, y, fmodel, 'Startpoint', c);
             elseif funcsel ==5 % linear
