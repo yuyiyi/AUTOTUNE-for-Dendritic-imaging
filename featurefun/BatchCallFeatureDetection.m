@@ -78,7 +78,7 @@ else
     %%%% auto feature detection using point detection
     sigma = handles.defaultPara.autofeature(1); % 2
     quant = handles.defaultPara.autofeature(2); % 3.5
-    [y, x] = Auto_points(handles, [], sigma, quant, 0, 1);
+    [y, x] = Auto_points(handles, [], sigma, quant, 0, 1, 0);
     handles.pt = [x, y];
     if ~isempty(handles.pt)
         [Temptrace, tempRoi, trace_cor, handles] = SegmentationBatch_autoThresh(handles, 0);

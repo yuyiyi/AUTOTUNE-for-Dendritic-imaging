@@ -14,6 +14,8 @@ para_default.minarea = 5; % minimal feature area (pixel)
 para_default.maxareagrad = 4; % max feature area (pixel) = linewidth*maxareagrad 
 para_default.MaxAR = 4; % max feature aspect ratio
 para_default.autofeature = [2, 3.5]; % parameter for autofeature detection
+para_default.autofeature_bg = 0.3; % background thresholding parameter 
+para_default.ifbg = 0; % if manually select background for auto detection
 para_default.shaftlength = 60; % default shaft length (pixel)
 
 %%%%%% cross-session alignment

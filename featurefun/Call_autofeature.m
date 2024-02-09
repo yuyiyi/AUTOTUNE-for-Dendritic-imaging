@@ -13,7 +13,9 @@ handles.dend_shaft = [];
 f_wait = waitbar(0.2,'Auto Feature Detection progressing');
 sigma = handles.defaultPara.autofeature(1); % 2
 quant = handles.defaultPara.autofeature(2); % 3.5
-[y, x] = Auto_points(handles, [], sigma, quant, 0, 1);
+ifmanualbg = handles.defaultPara.ifbg;
+[y, x] = Auto_points(handles, [], sigma, quant, 0, 1, ifmanualbg);
+% [IIM JJM deltaI Iabs] = AutoFeature_detection(im, sigma, quant, plot_flag)
 handles.pt = [x, y];
 waitbar(0.5, f_wait, 'Auto Feature Detection progressing');
 [Temptrace, tempRoi, trace_cor, handles] = SegmentationBatch_autoThresh(handles, 0);

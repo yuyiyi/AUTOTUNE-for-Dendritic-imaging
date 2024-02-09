@@ -1,5 +1,5 @@
 function [IIM, JJM, deltaI, Iabs, Imap] = ...
-    Auto_points(handles, rect, sigma, quant, plot_flag, pointmode)
+    Auto_points(handles, rect, sigma, quant, plot_flag, pointmode, ifbg)
 % a function of particle detection. Use Delaunay triangulation to
 % estimate local background intensity and t-test to determine true particles.
 % Inputs: 
@@ -12,23 +12,26 @@ function [IIM, JJM, deltaI, Iabs, Imap] = ...
 im = handles.im_norm;
 if nargin == 4
     plot_flag = 0;
-elseif nargin == 5
     pointmode = 1;
+    ifbg = 1;
 end
-% scrsz = handles.scrsz;
-% pos_default = round([scrsz(3)/6 20 scrsz(3)/3*2 scrsz(4)-100]);    
-% if isempty(findobj('type','figure','number',20))
-%     pos = pos_default;    
-% else
-%     h1_handles = get(figure(20));
-%     pos = h1_handles.Position;
-% end
-% h1 = figure(20);
-% clf('reset')
-% set(h1,'Name', 'Select a background region','Position',pos);
-% title('Select background region')
-% [bgpixel] = imcrop(im,rect);
-bgpixel = im(im<quantile(im(:), 0.3));
+if ifbg == 1
+    scrsz = handles.scrsz;
+    pos_default = round([scrsz(3)/6 20 scrsz(3)/3*2 scrsz(4)-100]);    
+    if isempty(findobj('type','figure','number',20))
+        pos = pos_default;    
+    else
+        h1_handles = get(figure(20));
+        pos = h1_handles.Position;
+    end
+    h1 = figure(20);
+    clf('reset')
+    set(h1,'Name', 'Select a background region','Position',pos);
+    [bgpixel] = imcrop(im,rect);
+    title('Select background region')
+else
+    bgpixel = im(im<quantile(im(:), handles.defaultPara.autofeature_bg));
+end
 I0 = mean(bgpixel(:));
 sDN = std(bgpixel(:));                  % dark noise;  sqrt(alpha) in eq(2)
 sP = 0;                             % Poisson noise

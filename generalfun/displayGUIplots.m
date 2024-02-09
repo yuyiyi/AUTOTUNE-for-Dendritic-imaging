@@ -34,11 +34,17 @@ if ifspine == 1
 
         mmax = quantile(handles.trace, 0.9);
         mmin = quantile(handles.trace, 0.1);
-        g = mmax-mmin;
-        ff = bsxfun(@plus, handles.trace, cumsum([0,g(1:end-1)]));
+        g = mean(mmax)-mean(mmin);
+%         ff = bsxfun(@plus, handles.trace, cumsum([0,g(1:end-1)]));
         axes(handles.CalciumTrace), hold on
-        for i =1:size(handles.trace,2)
-            plot(1:size(handles.trace,1),ff(:,i), 'color', cc(i,:))
+        if size(handles.trace,2)>20
+            iilist = randperm(size(handles.trace,2));
+        else
+            iilist = 1:size(handles.trace,2);
+        end
+        for i =1:min(20,length(iilist))
+            i1 = iilist(i);
+            plot(1:size(handles.trace,1), handles.trace(:,i1) + g*(i-1), 'color', cc(i,:))
             drawnow
         end
 %         title('Spine signal')

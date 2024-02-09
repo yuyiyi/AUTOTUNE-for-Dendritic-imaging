@@ -14,7 +14,7 @@ end
 h1 = figure(15);
 clf('reset')
 set(h1,'Name', 'Manual spine detection','Position', pos);
-imagesc(handles.im_norm, [quantile(handles.im_norm(:), 0.3), max(handles.im_norm(:))]);
+imagesc(handles.im_norm, [quantile(handles.im_norm(:), 0.3), quantile(handles.im_norm(:),0.99)]);
 title('Click on the image to add ROI. Press return or click in gray area to end session')
 drawnow
 if ~isempty(handles.roi_seed)
