@@ -53,7 +53,7 @@ function AUTOTUNE_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to AUTOTUNE (see VARARGIN)
 mainpath = mfilename('fullpath');
 [ filepath , name , ext ] = fileparts( mainpath );
-addpath(fullfile(filepath,'featurefun'))
+addpath(fullfile(filepath,'regfun'))
 addpath(fullfile(filepath,'generalfun'))
 addpath(fullfile(filepath,'featurefun'))
 addpath(fullfile(filepath,'util'))
