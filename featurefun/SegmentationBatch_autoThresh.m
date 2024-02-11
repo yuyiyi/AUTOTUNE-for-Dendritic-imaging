@@ -9,7 +9,12 @@ mov2d_filt = handles.mov2d_filt;
 %%%%%% setup parameters
 areathreshold = handles.defaultPara.minarea;
 th_grad = handles.defaultPara.th_grad;
-linewidth = handles.linewidth;
+if length(handles.dendrite)>1
+    linewidth = max(handles.linewidth, max([handles.dendrite.linewidth]));
+else
+    linewidth = handles.linewidth;
+end
+spinerange = linewidth * handles.defaultPara.spinedist;
 w = linewidth*handles.defaultPara.w;
 MaxAR = handles.defaultPara.MaxAR;
 maxareagrad = handles.defaultPara.maxareagrad;
@@ -29,7 +34,7 @@ dendtrace = []; p_in_id = [];
 if ~isempty(handles.dendrite)
     for k = 1:length(handles.dendrite)
         cspoints = handles.dendrite(k).dend_line;
-        [~, kymo_cordinate] = line_expand(cspoints', linewidth*3, 20);
+        [~, kymo_cordinate] = line_expand(cspoints', linewidth*spinerange, 20);
         polydot = kymo_cordinate';
         intr_outline = [polydot(:,1:2); flip(polydot(:,end-1:end),1);polydot(1,1:2)];
         in_region = inpolygon(ptbatch(:,1), ptbatch(:,2), intr_outline(:,1), intr_outline(:,2));

@@ -49,7 +49,7 @@ if continueflag == 1 && handles.crossSessionReg == 0
 %     imglist = 1:length(imageinfo);
     RegPara.Imagelength = length(imageinfo);
     assignin('base', 'imageinfo', imageinfo)
-    RegPara.NiterPrealign = 20;
+%     RegPara.NiterPrealign = 20;
     if ~isempty(fext)
         I1 = imread(handles.Datalist{k}, 1);
     else
@@ -73,7 +73,7 @@ elseif continueflag == 1 && handles.crossSessionReg == 1
         RegPara.Imagelength(i) = length(tmp);        
     end
     
-    RegPara.NiterPrealign = 20;
+%     RegPara.NiterPrealign = 20;
     I1 = imread(fullfile(handles.Datalist{k}, imageinfo(1).name), 1);
     w = whos('I1');
     RegPara.RawPrecision = class(I1);

@@ -4,7 +4,7 @@ RegPara.Corr_initial = 0;
 if RegPara.NimgFirstRegistration >= 20
     ini_iter = 1; Corr_initial = 0;
     t0 = ceil(RegPara.Imagelength(1)*0.1);
-    while Corr_initial < 0.2 && ini_iter <= 5
+    while Corr_initial < RegPara.MinCorr_initial && ini_iter <= RegPara.iniSearchiter
         I = []; 
         for i = (1:RegPara.NimgFirstRegistration)+(ini_iter-1)*RegPara.NimgFirstRegistration
             t1 = i + t0; % always skip the initial part of the movie
@@ -28,7 +28,10 @@ if RegPara.NimgFirstRegistration >= 20
             RegPara.dsprealign = RegPara_tmp.dsprealign;
             RegPara.Corr_initial = Corr_initial;
             RegPara.mimg = RegPara_tmp.mimg;
-            d = sqrt(sum(RegPara.dsprealign.^2,2));
+            RegPara.corrcut = RegPara_tmp.corrcut;
+            RegPara.mimgNframe = RegPara_tmp.mimgNframe;
+            d = diff(RegPara.dsprealign);
+%             d = sqrt(sum(RegPara.dsprealign.^2,2));
             ds_val_threshold = mean(d) + 3.5*std(d);
         end
         ini_iter = ini_iter+1;

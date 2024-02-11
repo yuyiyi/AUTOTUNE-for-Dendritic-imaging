@@ -52,7 +52,7 @@ else
 end
 handles.crossSessionReg = 0;
 handles.lowSNR = 0;
-handles.showresult = 0;
+handles.showresult = 1;
 handles.savetoBin = 1; 
 set(handles.MaxBinText, 'Enable', 'on')
 [userview, systemview] = memory;

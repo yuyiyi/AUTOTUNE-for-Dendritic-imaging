@@ -1,4 +1,5 @@
-function [spine_evolve, num_turnover, Dendrite_CrossSess, filelist, targetdata] = spineEvolveAna(handles)
+function [spine_evolve, num_turnover, Dendrite_CrossSess, filelist, targetdata]...
+    = spineEvolveAna(handles)
 
 % funcsel = prepCrossSessReg(handles);
 %     rb1 = 'Register to the last dataset';
@@ -72,6 +73,10 @@ targetdata = handles.datanames{targetID};
 filelist{1,1} = fullfile(handles.datafilepath, handles.datafilename(targetID));
 k1 = 0;
 k2 = 1;
+
+frac = 1/(length(datalist)+1)*0.5;
+f_wait = waitbar(frac,sprintf('Cross-session alignment data %d of %d',1, length(datalist)));
+
 for i2 = 1:length(datalist) %2:length(handles.datafilename)    
     i1 = datalist(i2);        
     k2 = k2+1;
@@ -111,10 +116,13 @@ for i2 = 1:length(datalist) %2:length(handles.datafilename)
     end
     
     R_points = []; t_points = [];
-    f_wait = waitbar(0.2,'Feature Registration');
+    frac = i2/length(datalist)*0.8;
+    waitbar(frac, f_wait, sprintf('Cross-session alignment data %d of %d',...
+        i2, length(datalist)));
+
     [R_points, t_points, im_mask_reg, handles]...
         = setupCross_SessionReg(handles, im_mask, withrotation, '');
-    waitbar(0.5, f_wait,'Feature Registration');
+%     waitbar(0.5, f_wait,'Feature Registration');
 
     if ~isempty(roi_seed_master) && ~isempty(R_points)
         if ~isempty(handles.dendrite) && ~isempty(dendidmask)
@@ -149,6 +157,13 @@ for i2 = 1:length(datalist) %2:length(handles.datafilename)
                 tmp = setdiff(dendidcurrent, dendoverlaptmp(:,2));
                 dendoverlaptmp = cat(1, dendoverlaptmp, [zeros(length(tmp),1), tmp]);
             end
+            if i2 == 1
+                Dendrite_CrossSess = dendoverlaptmp;
+            else
+                Dendrite_CrossSess(1:size(dendoverlaptmp,1), k2) = dendoverlaptmp(:,2);
+            end
+        elseif isempty(handles.dendrite) && ~isempty(dendidmask)
+            dendoverlaptmp = [dendidmask, zeros(length(dendidmask),1)];
             if i2 == 1
                 Dendrite_CrossSess = dendoverlaptmp;
             else

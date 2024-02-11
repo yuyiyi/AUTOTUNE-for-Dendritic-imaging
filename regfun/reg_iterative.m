@@ -21,7 +21,8 @@ for i = 1:ops.NiterPrealign
         igood = igood(1:maxImgPreAlign);  
     end
     ops.mimg = mean(dreg(:,:,igood),3);
-    
+    ops.corrcut = Corr(igood(end));
+    ops.mimgNframe = length(igood);
     err(i) = mean(sum((dsold - dsnew).^2,2)).^.5;
         
     dsold = dsnew;

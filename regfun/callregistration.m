@@ -2,10 +2,12 @@ function [handles, RegPara] = callregistration(handles)
 
 for k = 1:length(handles.Datalist)
     clear RegPara
+    para_default = defaultparameter;
+    RegPara = para_default.RegPara;
     RegPara.savepath               = handles.savepath;
     RegPara.useGPU                 = handles.useGPU; % if you can use a GPU in matlab this accelerate registration approx 3 times
-    RegPara.PhaseCorrelation       = 1; % set to 0 for non-whitened cross-correlation
-    RegPara.SubPixel               = Inf; % 2 is alignment by 0.5 pixel, Inf is the exact number from phase correlation
+%     RegPara.PhaseCorrelation       = 1; % set to 0 for non-whitened cross-correlation
+%     RegPara.SubPixel               = Inf; % 2 is alignment by 0.5 pixel, Inf is the exact number from phase correlation
 %     frac = k/length(handles.Datalist)*0.1;
     frac = 0.1;
     f_wait = waitbar(frac, sprintf('Register data %d of %d', k, length(handles.Datalist)));

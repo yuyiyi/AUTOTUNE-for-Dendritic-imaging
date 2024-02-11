@@ -1,4 +1,4 @@
-function [dv, corr, regdata] = registration_offsets_modified(data, ops, removeMean)
+function [dv, corrval, regdata] = registration_offsets_modified(data, ops, removeMean)
 % modified by Yiyi Yu
 %% Parameters
 [ly, lx, nFrames] = size(data);
@@ -74,7 +74,7 @@ else
 end
 %% Work through data in batches
 dv = zeros(nFrames, 2);
-corr = zeros(nFrames, 1);
+corrval = zeros(nFrames, 1);
 if translate
   regdata = zeros(ly, lx, nFrames, 'uint8');
 end
@@ -138,7 +138,7 @@ for bi = 1:nBatches
     regdata(:,:,fi) = gather_try(res);
   end
   dv(fi,:) = [iy(:) ix(:)];
-  corr(fi) = squeeze(bcorr);
+  corrval(fi) = squeeze(bcorr);
 end
 if useGPU
     reset(g); 

@@ -6,10 +6,15 @@ scrsz = get(groot,'ScreenSize');
 pos_seg = round([scrsz(3)*0.1 scrsz(4)*0.55 scrsz(3)*0.4 scrsz(4)/3]);
 mov = handles.mov;
 mov2d_filt = handles.mov2d_filt;
+
 %%%%%% setup parameters
 areathreshold = handles.defaultPara.minarea;
 th_grad = handles.defaultPara.th_grad;
-linewidth = handles.linewidth;
+if length(handles.dendrite)>1
+    linewidth = max(handles.linewidth, max([handles.dendrite.linewidth]));
+else
+    linewidth = handles.linewidth;
+end
 w = linewidth*handles.defaultPara.w;
 
 d1 = handles.size(1);
