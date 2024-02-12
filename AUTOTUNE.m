@@ -51,8 +51,9 @@ function AUTOTUNE_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to AUTOTUNE (see VARARGIN)
-mainpath = mfilename('fullpath');
+mainpath = mfilename('fullpath')
 [ filepath , name , ext ] = fileparts( mainpath );
+addpath(filepath)
 addpath(fullfile(filepath,'regfun'))
 addpath(fullfile(filepath,'generalfun'))
 addpath(fullfile(filepath,'featurefun'))
