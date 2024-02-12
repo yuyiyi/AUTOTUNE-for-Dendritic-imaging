@@ -1,4 +1,5 @@
-function [spine_evolve, num_turnover, Dendrite_CrossSess, filelist, targetdata]...
+function [spine_evolve, num_turnover, Dendrite_CrossSess,...
+    filelist, targetdata, TranM, handles]...
     = spineEvolveAna(handles)
 
 % funcsel = prepCrossSessReg(handles);
@@ -20,7 +21,9 @@ datalist = setdiff(1:length(handles.datafilename), targetID);
 
 handles = loadtrace(handles, targetID);
 im_mask = handles.im_norm;
+handles.im_norm_mask = im_mask;
 roi_seed_master = handles.roi_seed;
+handles.roi_seed_master = roi_seed_master;
 if isempty(roi_seed_master) || isempty(im_mask)
     return
 end
@@ -44,14 +47,22 @@ end
 s0 = size(spineparameters_mask, 2);
 subheadings = ["_spineID" "_area" "_loc" "_dendID"];
 
-dend_roi_mask = [];
 dend_line_mask = [];
+arc_all_mask = [];
 dendidmask = [];
+dendloc0_mask = []; % the start points of the dendrite
 if ~isempty(handles.dendrite)
-    dend_roi_mask = handles.dend_rois;
     dend_line_mask = handles.dend_line_all;
     dendidmask = handles.dend_title; 
+    dendloc0_mask = zeros(length(dendidmask),1);
+    for k = 1:length(handles.dendrite)
+        dend_line = handles.dendrite(k).dend_line;
+        dC = diff(dend_line,1,1);
+        arc = cumsum(sqrt(sum([zeros(1,2); dC].^2,2)));
+        arc_all_mask = cat(1, arc_all_mask, arc); 
+    end
 end
+handles.dend_line_mask = dend_line_mask;
 
 handles.savepath = handles.datafilepath;
 withrotation = 1;
@@ -73,9 +84,12 @@ targetdata = handles.datanames{targetID};
 filelist{1,1} = fullfile(handles.datafilepath, handles.datafilename(targetID));
 k1 = 0;
 k2 = 1;
-
+k3 = 0;
 frac = 1/(length(datalist)+1)*0.5;
 f_wait = waitbar(frac,sprintf('Cross-session alignment data %d of %d',1, length(datalist)));
+clear TranM
+TranM(1).R_points = eye(3);
+TranM(1).t_points = zeros(3,1);
 
 for i2 = 1:length(datalist) %2:length(handles.datafilename)    
     i1 = datalist(i2);        
@@ -123,52 +137,94 @@ for i2 = 1:length(datalist) %2:length(handles.datafilename)
     [R_points, t_points, im_mask_reg, handles]...
         = setupCross_SessionReg(handles, im_mask, withrotation, '');
 %     waitbar(0.5, f_wait,'Feature Registration');
-
+    TranM(k2).R_points = R_points;
+    TranM(k2).t_points = t_points;
     if ~isempty(roi_seed_master) && ~isempty(R_points)
-        if ~isempty(handles.dendrite) && ~isempty(dendidmask)
-            dend_roi_current = handles.dend_rois;
-            dend_line_current = handles.dend_line_all;
-            dendidcurrent = handles.dend_title;
-            dend_line_translate = R_points*[dend_line_mask(:,1:2)'; 1*randn(1,size(dend_line_mask(:,1:2),1))];
-            dend_line_translate = bsxfun(@plus, dend_line_translate, t_points);
-            dend_line_translate = round(dend_line_translate(1:2,:)');
-            dend_line_translate(:,3) = dend_line_mask(:,3); % mask dendrite id
-            iiout = [find(min(dend_line_translate(:,1:2),[],2)<=0); find(dend_line_translate(:,1)>d2); find(dend_line_translate(:,2)>d1)];
-            dend_line_translate(iiout,:) = [];
-            dendpixelidx = sub2ind(size(im_norm), dend_line_translate(:,2), dend_line_translate(:,1));
-            [c, itmp] = unique(dendpixelidx);
-            dend_line_translate = dend_line_translate(itmp,:);
-            dendpixelidx = dendpixelidx(itmp,:);
-            dendlength1 = groupcounts(dend_line_translate(:,3));
-            dendidtmp = dend_roi_current(dendpixelidx); % current dendrite id            
-            % generate confusion matrix h [current id, mask id] translate
-            % mask to match current
-            dendorder = unique([dendidcurrent; dendidmask]);
-            dendlength = zeros(length(dendorder),1)+eps;
-            dendlength(ismember(dendidmask, dendorder)) = dendlength1;
-            [h, dorder] = confusionmat(dendidtmp(dendidtmp~=0), dend_line_translate(dendidtmp~=0,3),'Order', dendorder);
-            [matchv, matchid] = max(h); % matched dend in the current dataset
-            
-            dendoverlaptmp = [dorder, dorder(matchid)];
-            dendoverlaptmp(matchv./dendlength'<0.2,2) = 0;
-            dendoverlaptmp(~ismember(dendoverlaptmp(:,1), dendidmask), :) = [];
-            dendoverlaptmp = sortrows(dendoverlaptmp, 1);
-            if ~isempty(setdiff(dendidcurrent, dendoverlaptmp(:,2)))
-                tmp = setdiff(dendidcurrent, dendoverlaptmp(:,2));
-                dendoverlaptmp = cat(1, dendoverlaptmp, [zeros(length(tmp),1), tmp]);
+        if ~isempty(dendidmask)
+            if ~isempty(handles.dendrite) 
+                dend_roi_current = handles.dend_rois;
+                dend_line_current = handles.dend_line_all;
+                dendidcurrent = handles.dend_title;
+                arc_all_current = [];
+                for k = 1:length(handles.dendrite)
+                    dend_line = handles.dendrite(k).dend_line;
+                    dC = diff(dend_line,1,1);
+                    arc = cumsum(sqrt(sum([zeros(1,2); dC].^2,2)));
+                    arc_all_current = cat(1, arc_all_current, arc); 
+                end
+                % translate the template 
+                dend_line_translate = R_points*[dend_line_mask(:,1:2)'; 1*randn(1,size(dend_line_mask(:,1:2),1))];
+                dend_line_translate = bsxfun(@plus, dend_line_translate, t_points);
+                dend_line_translate = round(dend_line_translate(1:2,:)');
+                dend_line_translate(:,3) = dend_line_mask(:,3); % mask dendrite id
+                % match translated dendrite with the dendritic point available
+                % in the current session
+                iiout = [find(min(dend_line_translate(:,1:2),[],2)<=0); find(dend_line_translate(:,1)>d2); find(dend_line_translate(:,2)>d1)];
+                dend_line_translate(iiout,:) = [];
+                dendpixelidx = sub2ind(size(im_norm), dend_line_translate(:,2), dend_line_translate(:,1));
+                [c, itmp] = unique(dendpixelidx);
+                dend_line_translate = dend_line_translate(itmp,:);
+                dendpixelidx = dendpixelidx(itmp,:);
+                dendlength1 = groupcounts(dend_line_translate(:,3));
+                dendidtmp = dend_roi_current(dendpixelidx); % current dendrite id            
+                % generate confusion matrix h [current id, mask id] translate
+                % mask to match current (1. excluding pixels outside the current image; 
+                % 2. match dendritic id by pixel overlap)
+                dendorder = unique([dendidcurrent; dendidmask]);
+                dendlength = zeros(length(dendorder),1)+eps;
+                dendlength(ismember(dendidmask, dendorder)) = dendlength1;
+                [h, dorder] = confusionmat(dendidtmp(dendidtmp~=0), dend_line_translate(dendidtmp~=0,3),'Order', dendorder);
+                [matchv, matchid] = max(h); % matched dend in the current dataset            
+
+                dendoverlaptmp = [];
+                dendoverlaptmp = [dorder, dorder(matchid)]; 
+                dendoverlaptmp(matchv./dendlength'<0.2,2) = 0;
+                dendoverlaptmp(~ismember(dendoverlaptmp(:,1), dendidmask), :) = [];
+                dendoverlaptmp = sortrows(dendoverlaptmp, 1);            
+
+                % map the current dendritic start loc relative to the matched
+                % template (linear location in pixel)
+                dendiniloctmp = dendloc0_mask;
+                for i3 = 1:size(dendoverlaptmp,1) 
+                    did1 = dendoverlaptmp(i3,1);
+                    did2 = dendoverlaptmp(i3,2);
+                    if did1*did2>0
+                        tmplinemask = dend_line_mask(dend_line_mask(:,3)==did1,1:2);
+                        tmplinecurrent = dend_line_current(dend_line_current(:,3)==did2,1:2);
+                        dd1 = pdist2(tmplinecurrent(1,:), tmplinemask);
+                        [v1,idx1] = min(dd1,[],2);
+                        arctmp = arc_all_mask(dend_line_mask(:,3)==did1);
+                        arc1 = arctmp(idx1);
+                        dd2 = pdist2(tmplinemask(1,:), tmplinecurrent);
+                        [v2,idx2] = min(dd2,[],2);
+                        arctmp = arc_all_mask(dend_line_current(:,3)==did2);
+                        arc2 = arctmp(idx2);
+                        
+                        if arc1>=arc2
+                            dendiniloctmp(i3,2) = arc1;
+                        else
+                            dendiniloctmp(i3,2) = -arc2;                        
+                        end
+                    else
+                        dendiniloctmp(i3, 2) = nan;
+                    end
+                end
+                % append new dendrite to the table
+                if ~isempty(setdiff(dendidcurrent, dendoverlaptmp(:,2)))
+                    tmp = setdiff(dendidcurrent, dendoverlaptmp(:,2));
+                    dendoverlaptmp = cat(1, dendoverlaptmp, [nan(length(tmp),1), tmp]);
+                    dendiniloctmp = cat(1, dendiniloctmp, [nan(length(tmp),1), zeros(length(tmp),1)]);
+                end
+            elseif isempty(handles.dendrite)
+                dendoverlaptmp = [dendidmask, nan(length(dendidmask),1)];
+                dendiniloctmp = [dendloc0_mask, nan(length(dendidmask),1)];
             end
             if i2 == 1
-                Dendrite_CrossSess = dendoverlaptmp;
+                Dendrite_CrossSess = [dendoverlaptmp(:,1),dendiniloctmp(:,1),dendoverlaptmp(:,2),dendiniloctmp(:,2)];
             else
-                Dendrite_CrossSess(1:size(dendoverlaptmp,1), k2) = dendoverlaptmp(:,2);
+                Dendrite_CrossSess(1:size(dendoverlaptmp,1), k3+1:k3+2) = [dendoverlaptmp(:,2),dendiniloctmp(:,2)];
             end
-        elseif isempty(handles.dendrite) && ~isempty(dendidmask)
-            dendoverlaptmp = [dendidmask, zeros(length(dendidmask),1)];
-            if i2 == 1
-                Dendrite_CrossSess = dendoverlaptmp;
-            else
-                Dendrite_CrossSess(1:size(dendoverlaptmp,1), k2) = dendoverlaptmp(:,2);
-            end
+            k3 = size(Dendrite_CrossSess,2);
         end       
 
         roi_seed = R_points*[roi_seed_master'; 1*randn(1,size(roi_seed_master,1))];
@@ -270,17 +326,19 @@ end
 figure(25), subplot(c1,c2,i2+1),
 legend('retained', 'lost', 'gained')
 
-figure(25)
-if size(num_turnover,1)>2
-    subplot(c1,c2,length(handles.datafilename)+1), 
-    barwitherr(std(num_turnover,[],1)/sqrt(size(num_turnover,1)),mean(num_turnover,1))
-else
-    subplot(c1,c2,length(handles.datafilename)+1),
-    bar(mean(num_turnover,1))
-end
+figure(25), subplot(c1,c2,length(handles.datafilename)+1),
+bar(num_turnover', 'LineStyle', 'none')
+    legend(handles.datanames([datalist]))
+% if size(num_turnover,1)>2
+%     subplot(c1,c2,length(handles.datafilename)+1), 
+%     barwitherr(std(num_turnover,[],1)/sqrt(size(num_turnover,1)),mean(num_turnover,1))
+% else
+%     subplot(c1,c2,length(handles.datafilename)+1),
+%     bar(mean(num_turnover,1))
+% end
     box off, set(gca,'XTickLabel',{'lost', 'retain', 'gain'})
     ylabel('Number of spines')
-    
+
 num_turnover = array2table(num_turnover);
 num_turnover.Properties.VariableNames = {'lost', 'retain', 'gain'};
 overlap_totarget(overlap_totarget==0) = nan;
@@ -288,12 +346,18 @@ spine_evolve = array2table(overlap_totarget);
 str = append(handles.datanames([targetID, datalist])',subheadings);
 spine_evolve.Properties.VariableNames = reshape(str', 1, []);
 
+handles.thresh = thresh;
+handles.targetID = targetID;
+handles.tabletitlesub = handles.datanames([targetID, datalist]);
+
 % assignin('base', 'spine_evolve', spine_evolve);
 
 if ~isempty(Dendrite_CrossSess)
 %     assignin('base', 'Dendrite_CrossSess', Dendrite_CrossSess);
     Dendrite_CrossSess = array2table(Dendrite_CrossSess);
-    Dendrite_CrossSess.Properties.VariableNames = handles.datanames([targetID, datalist]);
+    subheadings = ["_dendID" "_startloc"];
+    str = append(handles.datanames([targetID, datalist])',subheadings);
+    Dendrite_CrossSess.Properties.VariableNames = reshape(str', 1, []);
 end
 close(f_wait), delete(f_wait)
 
@@ -302,7 +366,8 @@ if ~isempty(areasummary)
     dx = mean(diff(xx));
     [h, Xedges, Yedges] = histcounts2(areasummary(:,1), areasummary(:,2),...
         xx, 1:length(handles.datafilename)+1);
-    subplot(c1,c2,length(handles.datafilename)+2), bar(xx(1:19)+dx/2, h)
+    subplot(c1,c2,length(handles.datafilename)+2), 
+    bar(xx(1:19)+dx/2, h, 'LineStyle', 'none')
     legend(handles.datanames([targetID, datalist]))
     box off, xlabel('Spine area (pixel)'), ylabel('Number of spines')
 end
@@ -312,7 +377,9 @@ if ~isempty(dloc)
     dx = mean(diff(xx));
     [h, Xedges, Yedges] = histcounts2(dloc(:,1), dloc(:,2),...
         xx, 1:length(handles.datafilename)+1);
-    subplot(c1,c2,length(handles.datafilename)+3), bar(xx(1:19)+dx/2, h)
+    subplot(c1,c2,length(handles.datafilename)+3),
+    bar(xx(1:19)+dx/2, h, 'LineStyle', 'none')
     legend(handles.datanames([targetID, datalist]))
     box off, xlabel('Spine distance (pixel)'), ylabel('Number of spines')
 end
+drawnow

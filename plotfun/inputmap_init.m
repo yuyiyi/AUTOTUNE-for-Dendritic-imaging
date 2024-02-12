@@ -65,5 +65,13 @@ handles.MetaInfor.notesBAPremoval = '';
 handles.MetaInfor.StampRespfiltertype = '';
 handles.MetaInfor.StampRespfilterFunc = '';
 handles.MetaInfor.BehRespCond = '';
+
+% SpineTurnover 
+handles.thresh = [];
+handles.targetID = [];
+handles.tabletitlesub = '';
+handles.im_norm_mask = [];
+handles.dend_line_mask = [];
+handles.roi_seed_master = [];
 clc
 
