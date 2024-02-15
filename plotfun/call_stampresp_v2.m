@@ -89,10 +89,15 @@ else
                     StampResp.trace_sem = trace_sem;
                     StampResp.rowstamp = glist;
                     StampResp.coltitle = ttlabel;
+                    savevariblename = sprintf('StampResp_%s%s', nameappend);
                     handles.StampResp = StampResp;
                     if dosave==1
+%                         save(fullfile(handles.datafilepath, handles.datafilename{k}),...
+%                             ['StampResp', nameappend], '-append')
+                        tempdata.(savevariblename) = StampResp;
                         save(fullfile(handles.datafilepath, handles.datafilename{k}),...
-                            ['StampResp', nameappend], '-append')
+                            '-struct','tempdata', savevariblename, '-append')
+                        clear tempdata
                     end            
                 elseif funcsel > 1 && ~isempty(fmodel)
                     figiniID = 500+k1;
