@@ -74,7 +74,7 @@ c1 = ceil((length(handles.datafilename)+3)/3);
 c2 = 3;
 
 subplot(c1,c2,1), 
-imshow(im_mask, [])
+imshow(im_mask, [0, quantile(im_mask(:), 0.98)])
 hold on, plot(roi_seed_master(:,1), roi_seed_master(:,2), '+b')
 set(gca, 'Ydir', 'reverse')
 title(sprintf('registration target: dataset %d', targetID))
@@ -268,7 +268,7 @@ for i2 = 1:length(datalist) %2:length(handles.datafilename)
         end    
         
         figure(25), subplot(c1,c2,i2+1)
-        imshow(im_norm, [])
+        imshow(im_norm, [0, quantile(im_norm(:), 0.98)])
 %         set(gca, 'Ydir', 'reverse')
 %         hold on, plot(roi_seed(ia,1), roi_seed(ia,2), 'or') 
         % retain
