@@ -1,6 +1,7 @@
 function [v, smoothwin] = prep_filt(handles)
     v = 0;
-    smoothwin = 5;
+    smoothwin = handles.defaultPara.Denoise.movingaverage;
+    % smoothwin = 5;
     mainfig_pos = get(handles.mainfigure, 'Position');    
     scrsz = handles.scrsz;
     pos = mainfig_pos;

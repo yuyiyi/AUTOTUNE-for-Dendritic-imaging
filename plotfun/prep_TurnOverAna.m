@@ -1,5 +1,6 @@
 function [thresholdvalue, targetID] = prep_TurnOverAna(handles)
-    thresholdvalue = 3;
+    % thresholdvalue = 3;
+    thresholdvalue = handles.defaultPara.spineRetain;
     targetID = 1;
     
     N = length(handles.datafilename);
@@ -38,7 +39,7 @@ function [thresholdvalue, targetID] = prep_TurnOverAna(handles)
         'Units', 'normalized',...
         'Position',[0.05 0.5 0.3 0.3],...
         'FontSize', 10, 'Max', 1,...
-        'String', 3);
+        'String', num2str(thresholdvalue));
     
     % pushbutton
     uicontrol(hplot,'style','pushbutton',...

@@ -1,7 +1,7 @@
 function para_default = defaultparameter
 % ------------------ edit with caution ---------------------------------
 %% movie denoise for feature detection (Don't change these parameters unless you are confident)
-para_default.GaussKernel = [4, 4, 2];   % movie denoise kernel
+para_default.GaussKernel = [4, 4, 2];   % movie denoise kernel (kernel size, kernel size,  kernel SD)
 para_default.maxLength = 4000;          % default dendritic width (pixel)
 
 %% parameter to feature segmentation
@@ -58,3 +58,7 @@ para_default.RegPara.FrameNoiniAlign  = 100;    % Number of frames for initial a
                                                 % and video length in processing                             
 para_default.RegPara.MinCorr_initial = 0.2;     % chunk search continue when initial registrition correlation below this value
 
+%% denoise trace (Input Mapping and Spine Turnover module)
+para_default.Denoise.movingaverage = 5;         % moving average window size
+para_default.Denoise.gaussfilt = [10, 0.3, 20]; % gaussian filtering [fps, signal filter kernel, baseline filter kernel]
+para_default.spineRetain = 10;                   % threshold for mapping cross-session spines
