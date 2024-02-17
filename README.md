@@ -8,9 +8,9 @@ A detailed user guide is in the main repository.[AUTOTUNE User Guide.pdf](url)
 Follow these three steps to get started quickly, from installation to working through a demo. 
 
 ### Step 1: Install AUTOTUNE
-If not already have Matlab installed, please install Matlab R2019a or higher, with following Matlab toolboxes Image Processing Toolbox, Curve Fitting Toolbox, Statistics and Machine Learning Toolbox, and Parallel Computing Toolbox. Download the GitHub repository of AUTOTUNE and put it in your local Matlab path. Call AUTOTUNE in Matlab command line. 
+If not already have Matlab installed, please install Matlab R2019a or higher, with following Matlab toolboxes Image Processing Toolbox, Curve Fitting Toolbox, Signal Processing Toolbox, Statistics and Machine Learning Toolbox, and Parallel Computing Toolbox. Download the GitHub repository of AUTOTUNE and put it in your local Matlab path. Call AUTOTUNE in Matlab command line. 
 
-To achieve smooth data processing, operating systems equipped with sufficient Random Access Memory (RAM) and a multicore Central Processing Unit (CPU) are recommended. The software was developed and tested using 32 GB RAM and an Intel Core i7-5960X CPU with a clock speed of 3.0 GHz and a NVIDIA GeForce GTX 960 graphics card. Graphics Processing Unit (GPU) devices is strongly recommended though not required. 
+To achieve smooth data processing, operating systems equipped with sufficient Random Access Memory (RAM) and a multicore Central Processing Unit (CPU) are recommended. The software was developed and tested using 32 GB RAM and an Intel Core i7-5960X CPU with a clock speed of 3.0 GHz and a NVIDIA GeForce GTX 960 graphics card. Graphics Processing Unit (GPU) devices are strongly recommended though not required. 
 
 ### Step 2: Try out a demo 
 
