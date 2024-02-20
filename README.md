@@ -22,7 +22,7 @@ Result figures would pop up while using the program, and also be saved on the lo
 
 3.	Spine Turnover analysis: SpineEvolveAnalysis_*.mat contains a table of cross-session aligned spine evolution data (spine_evolve), the number of spines that lost, retained and gain in each session, a table of cross-session aligned dendrites (Dendrite_CrossSess) is dendrites are available, file list for cross-session spine turnover analysis (filelist), target session for the cross-session analysis (crossSessAlign_target), and 
 
-4.	Input mapping: trace after back propagated action potential (bAP) removal and trace after filtering are append to the feature structure (_bAPremoval, and _filt).
+4.	Input mapping: trace after back propagated action potential (bAP) removal and trace after filtering are append to the feature structure (_bAPremoval, and _filt). If tuning analysis or behavioral relevant analysis were carried out, a StampResp* matrix or a BehavResp* matrix will be appended to the feature structure, as well as corresponding meta information.  
    
 ### Step 4: Edit default parameters
 Users may need to edit parameters to accommodate their unique applications. A list of editable parameters is provided in (/util/defaultparameter.m). Users can edit parameters for each module according to the commented instructions. Other than that, some parameters are also editable in popup windows during feature detection and trace analysis (InputMapping module).
