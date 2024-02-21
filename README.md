@@ -2,7 +2,7 @@
 
 A Matlab GUI for dendritic and spine imaging analysis AUTOTUNE was developed at the University of California, Santa Barbara as an open-source research tool. 
 
-AUTOTUNE implements essential methods to analyze functional imaging data of neuronal dendrites and spines, including but not limited to calcium imaging, voltage imaging, and glutamate imaging. It provides efficient algorithms for motion correction, feature extraction, and registering spines across multiple sessions. It is suitable for offline analysis of stimulus- and behavioral- -selectivity, spine plasticity, and active dendritic compartments. 
+AUTOTUNE implements essential methods to analyze functional imaging data of neuronal dendrites and spines, including but not limited to calcium imaging, voltage imaging, and glutamate imaging. It provides efficient algorithms for motion correction, feature extraction, and registering spines across multiple sessions. It is suitable for offline analysis of stimulus- and behavioral-selectivity, spine plasticity, and active dendritic compartments. 
 
 ![workflow](https://github.com/yuyiyi/AUTOTUNE-for-Dendritic-imaging/blob/main/util/githubpostfigure.jpg)
 
