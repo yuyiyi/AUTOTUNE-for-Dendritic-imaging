@@ -7,15 +7,15 @@ if ~isempty(handles.im_norm)
     %%%% show spine rois
     handles = get_spineROImask(handles);
     roi_mask = handles.roi_mask;
-%         roi_mask = zeros(size(handles.roi_mask));
+%     roi_mask = zeros(size(handles.roi_mask));
     if max(roi_mask(:))>0
         figure(1),
         r_color = handles.spinecolor;
         cc = hsv2rgb(cat(2, r_color, ones(length(r_color),1), ones(length(r_color),1)));
 %             showROI_3D(size(handles.im_norm,1), size(handles.im_norm,2), roi_mask, ones(size(handles.im_norm)), r_color')
-%         roi_mask = zeros(size(roi_mask));
+        roi_mask = zeros(size(roi_mask));
         showROI_3D(size(handles.im_norm,1), size(handles.im_norm,2), roi_mask, handles.im_norm, r_color')
-%         hold on, plot(handles.roi_seed(:,1), handles.roi_seed(:,2), 'or')
+        hold on, plot(handles.roi_seed(:,1), handles.roi_seed(:,2), 'or')
         drawnow
         if ~isempty(handles.roi_seed)
             for i = 1:size(handles.roi_seed,1)
