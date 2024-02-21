@@ -13,7 +13,7 @@ Follow these three steps to get started quickly, from installation to working th
 AUTOTUNE requires installation of MATLAB R2019a or higher, including the following toolboxes: Image Processing Toolbox, Curve Fitting Toolbox, Signal Processing Toolbox, Statistics and Machine Learning Toolbox, and Parallel Computing Toolbox. Download the GitHub repository of AUTOTUNE and place it in your local MATLAB path. To start the software, type AUTOTUNE in the MATLAB command window. To achieve smooth data processing, operating systems equipped with sufficient Random Access Memory (RAM) and a multicore Central Processing Unit (CPU) are recommended, but not required. 
 
 ### Step 2: Try out AUTOTUNE using demo data
-A detailed user guide is provided in the main repository ([url](https://github.com/yuyiyi/AUTOTUNE_GUIdevelopment/blob/main/AUTOTUNE%20User%20Guide.pdf)). Follow the guide to experience all the functional modules AUTOTUNE has to offer (/DemoData/). 
+A detailed user guide is provided in the main repository ([url](https://github.com/yuyiyi/AUTOTUNE_GUIdevelopment/blob/main/AUTOTUNE%20User%20Guide.pdf)). Follow the guide to experience all the functional modules AUTOTUNE has to offer (/DemoData/ and [url](https://www.dropbox.com/scl/fo/phtogl1b8r3vu0b2guh0b/h?rlkey=9lehu30p3dhws8vbfwwsxogww&dl=0)). Train videos are available at [url](https://www.dropbox.com/scl/fo/izap779o8q9ay6vkdf8ga/h?rlkey=v41ali84129jck9yspyygebmb&dl=0). 
 
 ### Step 3: Inspect saved results
 Results are automatically graphed in popups and saved on local disk for user inspection
