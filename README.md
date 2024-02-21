@@ -1,11 +1,10 @@
-# AUTOTUNE_GUIdevelopment
-AUTOTUNE was developed at the University of California, Santa Barbara as an open-source research tool. 
+# AUTOTUNE_GUIdevelopment                <img src = "https://github.com/yuyiyi/AUTOTUNE_GUIdevelopment/blob/1d73f8f0a6c8f2c092351ce8c045e4caf5805253/generalfun/Dendrite%20logo.png" width = "300" align = "right">
 
-A Matlab GUI for dendritic and spine imaging analysis
-AUTOTUNE implements essential methods to analyze functional imaging data of neuronal dendrites and spines, including but not limited to calcium imaging, voltage imaging, and glutamate imaging. It provides efficient algorithms for motion correction, feature extraction, and registering spines across multiple sessions. It is suitable for offline analysis of stimulus- and behavioral- -selectivity, spine plasticity, and active dendritic compartments. 
+A Matlab GUI for dendritic and spine imaging analysis AUTOTUNE was developed at the University of California, Santa Barbara as an open-source research tool. 
 
-A detailed user guide is in the main repository.[AUTOTUNE User Guide.pdf](url) 
-![logo](https://github.com/yuyiyi/AUTOTUNE_GUIdevelopment/blob/1d73f8f0a6c8f2c092351ce8c045e4caf5805253/generalfun/Dendrite%20logo.png)
+AUTOTUNE implements essential methods to analyze functional imaging data of neuronal dendrites and spines, including but not limited to calcium imaging, voltage imaging, and glutamate imaging. It provides efficient algorithms for motion correction, feature extraction, and registering spines across multiple sessions. It is suitable for offline analysis of stimulus- and behavioral-selectivity, spine plasticity, and active dendritic compartments. 
+
+![workflow](https://github.com/yuyiyi/AUTOTUNE-for-Dendritic-imaging/blob/main/util/githubpostfigure.jpg)
 
 ## Quick start 
 Follow these three steps to get started quickly, from installation to working through a demo. 
@@ -14,7 +13,7 @@ Follow these three steps to get started quickly, from installation to working th
 AUTOTUNE requires installation of MATLAB R2019a or higher, including the following toolboxes: Image Processing Toolbox, Curve Fitting Toolbox, Signal Processing Toolbox, Statistics and Machine Learning Toolbox, and Parallel Computing Toolbox. Download the GitHub repository of AUTOTUNE and place it in your local MATLAB path. To start the software, type AUTOTUNE in the MATLAB command window. To achieve smooth data processing, operating systems equipped with sufficient Random Access Memory (RAM) and a multicore Central Processing Unit (CPU) are recommended, but not required. 
 
 ### Step 2: Try out AUTOTUNE using demo data
-A detailed user guide is provided in the main repository ([url](https://github.com/yuyiyi/AUTOTUNE_GUIdevelopment/blob/main/AUTOTUNE%20User%20Guide.pdf)). Follow the guide to experience all the functional modules AUTOTUNE has to offer (/DemoData/). 
+A detailed user guide is provided in the main repository ([url](https://github.com/yuyiyi/AUTOTUNE_GUIdevelopment/blob/main/AUTOTUNE%20User%20Guide.pdf)). Follow the guide to experience all the functional modules AUTOTUNE has to offer (/DemoData/ and [url](https://www.dropbox.com/scl/fo/phtogl1b8r3vu0b2guh0b/h?rlkey=9lehu30p3dhws8vbfwwsxogww&dl=0)). Train videos are available at [url](https://www.dropbox.com/scl/fo/izap779o8q9ay6vkdf8ga/h?rlkey=v41ali84129jck9yspyygebmb&dl=0). 
 
 ### Step 3: Inspect saved results
 Results are automatically graphed in popups and saved on local disk for user inspection
