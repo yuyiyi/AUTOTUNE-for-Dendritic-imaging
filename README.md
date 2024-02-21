@@ -1,4 +1,4 @@
-# AUTOTUNE_GUIdevelopment                <img src = "https://github.com/yuyiyi/AUTOTUNE_GUIdevelopment/blob/1d73f8f0a6c8f2c092351ce8c045e4caf5805253/generalfun/Dendrite%20logo.png" width = "200">
+# AUTOTUNE_GUIdevelopment                <img src = "https://github.com/yuyiyi/AUTOTUNE_GUIdevelopment/blob/1d73f8f0a6c8f2c092351ce8c045e4caf5805253/generalfun/Dendrite%20logo.png" width = "200" align = "right">
 
 A Matlab GUI for dendritic and spine imaging analysis
 AUTOTUNE was developed at the University of California, Santa Barbara as an open-source research tool. 
