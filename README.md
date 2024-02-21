@@ -1,12 +1,9 @@
-# AUTOTUNE_GUIdevelopment <img src = "https://github.com/yuyiyi/AUTOTUNE_GUIdevelopment/blob/1d73f8f0a6c8f2c092351ce8c045e4caf5805253/generalfun/Dendrite%20logo.png" width = "100">
+# AUTOTUNE_GUIdevelopment                <img src = "https://github.com/yuyiyi/AUTOTUNE_GUIdevelopment/blob/1d73f8f0a6c8f2c092351ce8c045e4caf5805253/generalfun/Dendrite%20logo.png" width = "200">
 
 A Matlab GUI for dendritic and spine imaging analysis
-
 AUTOTUNE was developed at the University of California, Santa Barbara as an open-source research tool. 
 
 AUTOTUNE implements essential methods to analyze functional imaging data of neuronal dendrites and spines, including but not limited to calcium imaging, voltage imaging, and glutamate imaging. It provides efficient algorithms for motion correction, feature extraction, and registering spines across multiple sessions. It is suitable for offline analysis of stimulus- and behavioral- -selectivity, spine plasticity, and active dendritic compartments. 
-
-A detailed user guide is in the main repository.[AUTOTUNE User Guide.pdf](url) 
 
 ![workflow](https://github.com/yuyiyi/AUTOTUNE-for-Dendritic-imaging/blob/main/util/githubpostfigure.jpg)
 
