@@ -6,6 +6,7 @@ AUTOTUNE implements essential methods to analyze functional imaging data of neur
 
 A detailed user guide is in the main repository.[AUTOTUNE User Guide.pdf](url) 
 ![logo](https://github.com/yuyiyi/AUTOTUNE_GUIdevelopment/blob/1d73f8f0a6c8f2c092351ce8c045e4caf5805253/generalfun/Dendrite%20logo.png)
+![workflow](https://github.com/yuyiyi/AUTOTUNE-for-Dendritic-imaging/blob/main/util/githubpostfigure.jpg)
 
 ## Quick start 
 Follow these three steps to get started quickly, from installation to working through a demo. 
