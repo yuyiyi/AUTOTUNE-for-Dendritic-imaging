@@ -34,7 +34,6 @@ AUTOTUNE is an open-source software designed for systems neuroscientists perform
 Contact: yiyiy@ucsb.edu for questions and requests about the program
 
 ## Citing AUTOTUNE and related papers
-Yiyi Yu, Liam M. Adsit, Ikuko T. Smith, Comprehensive software suite for functional analysis and synaptic input mapping of dendritic spines imaged in vivo (Publication details will be updated)
-
+Yiyi Yu, Liam M. Adsit, and Ikuko T. Smith "Comprehensive software suite for functional analysis and synaptic input mapping of dendritic spines imaged in vivo," Neurophotonics 11(2), 024307 (16 April 2024). https://doi.org/10.1117/1.NPh.11.2.024307
 ## License
 This project is licensed under the terms of GNU GENERAL PUBLIC LICENSE. 
