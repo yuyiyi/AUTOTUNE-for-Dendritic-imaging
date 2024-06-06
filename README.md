@@ -7,7 +7,7 @@ AUTOTUNE implements essential methods to analyze functional imaging data of neur
 ![workflow](https://github.com/yuyiyi/AUTOTUNE-for-Dendritic-imaging/blob/main/util/githubpostfigure.jpg)
 
 ## Quick start 
-Follow these three steps to get started quickly, from installation to working through a demo. 
+Follow these steps to get started quickly, from installation to working through a demo. 
 
 ### Step 1: Install AUTOTUNE
 AUTOTUNE requires installation of MATLAB R2019a or higher, including the following toolboxes: Image Processing Toolbox, Curve Fitting Toolbox, Signal Processing Toolbox, Statistics and Machine Learning Toolbox, and Parallel Computing Toolbox. Download the GitHub repository of AUTOTUNE and place it in your local MATLAB path. To start the software, type AUTOTUNE in the MATLAB command window. To achieve smooth data processing, operating systems equipped with sufficient Random Access Memory (RAM) and a multicore Central Processing Unit (CPU) are recommended, but not required. 
